@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">E-Com Retail</string>
+    <string name="app_desc">App Slogan Here</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="fcm_token">FCM Token: %s</string>
+    <string name="copied">Quote copied to Clipboard</string>
+    <string name="search">Search</string>
+
+    <string name="login_title">Sign in with Google!</string>
+    <string name="login_desc">Sign in text here.</string>
+
+    <string name="next">NEXT</string>
+    <string name="skip">SKIP</string>
+    <string name="start">Get started</string>
+
+    <string name="slide_1_title">Welcome to App!</string>
+    <string name="slide_1_desc">Sample Description.</string>
+
+    <string name="slide_2_title">Slide 2 Title</string>
+    <string name="slide_2_desc">Slide 2 Description.</string>
+
+    <string name="slide_3_title">Slide 3 Title</string>
+    <string name="slide_3_desc">Slide 3 Description.</string>
+    <string name="search_act">Search for any Product</string>
+</resources>
