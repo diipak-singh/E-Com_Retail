@@ -1,4 +1,4 @@
-package com.example.e_comretail;
+package com.example.e_comretail.Details;
 
 public class AllCategoryDetails {
     private String categoryname, categotyphoto;

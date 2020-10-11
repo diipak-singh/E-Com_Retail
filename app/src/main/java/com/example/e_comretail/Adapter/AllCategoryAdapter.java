@@ -1,4 +1,4 @@
-package com.example.e_comretail;
+package com.example.e_comretail.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.e_comretail.Details.AllCategoryDetails;
+import com.example.e_comretail.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

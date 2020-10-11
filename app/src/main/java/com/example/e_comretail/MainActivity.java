@@ -25,9 +25,9 @@ import com.google.firebase.auth.FirebaseUser;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawer;
-    FirebaseUser user;
-    TextView navUsername;
-    ImageView navUserpic;
+    private FirebaseUser user;
+    private TextView navUsername;
+    private ImageView navUserpic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +74,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(intent);
                 break;
             case R.id.nav_offers:
-                Toast.makeText(this, "Offer", Toast.LENGTH_SHORT).show();
+                Intent intent2 = new Intent(MainActivity.this, OfferActivity.class);
+                startActivity(intent2);
                 break;
             case R.id.nav_my_order:
                 Toast.makeText(this, "My Orders", Toast.LENGTH_SHORT).show();
@@ -83,7 +84,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Toast.makeText(this, "Wishlist", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_account:
-                Toast.makeText(this, "Account", Toast.LENGTH_SHORT).show();
+                Intent intent1 = new Intent(MainActivity.this, MyAccount.class);
+                startActivity(intent1);
                 break;
             case R.id.nav_settings:
                 Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
@@ -107,7 +109,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void checkLogin() {
         if (user != null) {
-            navUsername.setText("Hello, "+user.getDisplayName());
+            String userName= user.getDisplayName();
+            String lastName = "";
+            String firstName= "";
+            if(userName.split("\\w+").length>1){
+
+                lastName = userName.substring(userName.lastIndexOf(" ")+1);
+                firstName = userName.substring(0, userName.lastIndexOf(' '));
+            }
+            else{
+                firstName = userName;
+            }
+
+            navUsername.setText("Hello, "+firstName);
             Glide.with(this)
                     .load(user.getPhotoUrl())
                     .apply(RequestOptions.circleCropTransform())

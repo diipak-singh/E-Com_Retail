@@ -8,13 +8,9 @@
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_baseline_home_24"
             android:title="Home" />
-<!--        <item-->
-<!--            android:id="@+id/nav_category"-->
-<!--            android:icon="@drawable/ic_category"-->
-<!--            android:title="Category" />-->
     </group>
 
-    <item android:title="Title here">
+    <item android:title="Shopping">
         <menu>
             <item
                 android:id="@+id/nav_category"
@@ -22,7 +18,7 @@
                 android:title="All Category" />
             <item
                 android:id="@+id/nav_offers"
-                android:icon="@drawable/ic_baseline_category_24"
+                android:icon="@drawable/ic_baseline_monetization_on_24"
                 android:title="Offer Zone" />
         </menu>
     </item>
@@ -30,16 +26,16 @@
         <menu>
             <item
                 android:id="@+id/nav_my_order"
-                android:icon="@drawable/ic_baseline_reorder_24"
+                android:icon="@drawable/ic_baseline_shop_two_24"
                 android:title="My Order" />
             <item
                 android:id="@+id/nav_my_coupon"
-                android:icon="@drawable/ic_baseline_reorder_24"
+                android:icon="@drawable/ic_baseline_local_offer_24"
                 android:title="My Coupons" />
             <item
                 android:id="@+id/nav_my_cart"
-                android:icon="@drawable/ic_baseline_reorder_24"
-                android:title="My Kart" />
+                android:icon="@drawable/ic_baseline_shopping_cart_24"
+                android:title="My Cart" />
             <item
                 android:id="@+id/nav_wishlist"
                 android:icon="@drawable/ic_baseline_favorite_24"
@@ -58,11 +54,11 @@
         <menu>
             <item
                 android:id="@+id/nav_chat"
-                android:icon="@drawable/ic_baseline_chat_bubble_24"
+                android:icon="@drawable/ic_baseline_chat_24"
                 android:title="My Chat"/>
             <item
                 android:id="@+id/nav_contact"
-                android:icon="@drawable/ic_baseline_chat_bubble_24"
+                android:icon="@drawable/ic_baseline_mail_outline_24"
                 android:title="Contact Us"/>
         </menu>
     </item>

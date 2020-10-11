@@ -6,13 +6,13 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.e_comretail.Adapter.AllCategoryAdapter;
+import com.example.e_comretail.Details.AllCategoryDetails;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,8 +24,9 @@ import java.util.Objects;
 
 public class AllCategory extends AppCompatActivity {
     private RecyclerView recyclerView;
-    ArrayList<AllCategoryDetails> list;
+    private ArrayList<AllCategoryDetails> list;
     private DatabaseReference ref;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -10,7 +10,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AllCategory"></activity>
+        <activity android:name=".OfferItemsDisplay"></activity>
+        <activity android:name=".ShowOfferItems" />
+        <activity android:name=".OfferActivity" />
+        <activity android:name=".Adapter.OfferActivity" />
+        <activity android:name=".SearchActivity" />
+        <activity android:name=".MyAccount" />
+        <activity android:name=".AllCategory" />
         <activity android:name=".MainActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".SplashActivity" />
