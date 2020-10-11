@@ -48,6 +48,7 @@ public class OfferActivity extends AppCompatActivity {
                 intent.putExtra("Category", list.get(position).getOffercategory());
                 intent.putExtra("SubCategory", list.get(position).getOfferSubCategory());
                 intent.putExtra("ProductId", list.get(position).getProductID());
+                intent.putExtra("Position", String.valueOf(position));
                 startActivity(intent);
             }
 
