@@ -17,6 +17,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.e_comretail.Offer.OfferActivity;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -86,9 +87,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_account:
                 Intent intent1 = new Intent(MainActivity.this, MyAccount.class);
                 startActivity(intent1);
-                break;
-            case R.id.nav_settings:
-                Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
                 break;
         }
         drawer.closeDrawer(GravityCompat.START);

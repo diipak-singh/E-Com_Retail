@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.e_comretail">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -10,14 +12,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".OfferItemsDisplay"></activity>
-        <activity android:name=".ShowOfferItems" />
-        <activity android:name=".OfferActivity" />
-        <activity android:name=".Adapter.OfferActivity" />
+        <activity android:name=".Offer.OfferOrderActivity"></activity>
+        <activity android:name=".AddNewAddress" />
+        <activity android:name=".ViewAddress" />
+        <activity android:name=".AddAddress" />
+        <activity android:name=".VerifyMobile" />
+        <activity android:name=".MainItemDisplay" />
+        <activity android:name=".SubCategory" />
+        <activity android:name=".UpdateUserInfo" />
+        <activity android:name=".Offer.OfferItemsDisplay" />
+        <activity android:name=".Offer.OfferActivity" />
         <activity android:name=".SearchActivity" />
         <activity android:name=".MyAccount" />
         <activity android:name=".AllCategory" />
-        <activity android:name=".MainActivity" />
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".SplashActivity" />
         <activity android:name=".MainIntroSlider">

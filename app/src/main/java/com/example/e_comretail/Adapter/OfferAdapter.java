@@ -11,9 +11,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.e_comretail.Details.OfferDetails;
 import com.example.e_comretail.R;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -35,28 +35,29 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull OfferAdapter.ViewHolder holder, int position) {
-        String ProductImage = list.get(position).getProductImageUrl();
-        String ProductName = list.get(position).getProductname();
-        String ProductActualPrice = list.get(position).getProductprice();
-        String ProductOffer = list.get(position).getOffermade();
-        String OfferEndDate = list.get(position).getOfferenddate();
-        String gstRate = list.get(position).getGstRate().trim();
+        String ProductImage = list.get(position).getImageUrl();
+        String ProductName = list.get(position).getItemName();
+        String ProductActualPrice = list.get(position).getItemPrice();
+        String ProductOffer = list.get(position).getOffer();
+        String OfferEndDate = list.get(position).getOfferdate();
+        String gstRate = list.get(position).getGstrate().trim();
 
-        //Some Calculation to get final product price
+        // Some Calculation to get final product price
         Double gstRate1 = Double.valueOf(gstRate);
         Double ProductOffer1 = Double.valueOf(ProductOffer);
         Double ProductActualPrice1 = Double.valueOf(ProductActualPrice);
         Double PriceAfterGst = ProductActualPrice1 + (ProductActualPrice1 * gstRate1 / 100);
-        Double ProductFinalPrice = PriceAfterGst - (PriceAfterGst * ProductOffer1 / 100);
+        int ProductFinalPrice = (int) (PriceAfterGst - (PriceAfterGst * ProductOffer1 / 100));
 
-        //Storing final product price in String to show in textview
+        // Storing final product price in String to show in textview
         String ProductFinalPrice1 = String.valueOf(ProductFinalPrice);
+        String PriceAfterGst1 = String.valueOf(PriceAfterGst);
 
         // placing values in holder
-        Picasso.get().load(ProductImage).into(holder.productImage);
+        Glide.with(context).load(ProductImage).into(holder.productImage);
         holder.productName.setText(ProductName);
         holder.productFinalPrice.setText("₹" + ProductFinalPrice1);
-        holder.productActualPrice.setText(ProductActualPrice);
+        holder.productActualPrice.setText(PriceAfterGst1);
         holder.productActualPrice.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         holder.productOffer.setText(ProductOffer + "%");
         holder.offerEndDate.setText("Offer Ends On: " + OfferEndDate);

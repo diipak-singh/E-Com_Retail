@@ -29,7 +29,7 @@ import java.util.Objects;
 public class MyAccount extends AppCompatActivity {
     private FirebaseUser user;
     private ImageView UserPic;
-    private TextView UserName;
+    private TextView UserName, Address;
     private ImageButton logout;
     FirebaseAuth firebaseAuth;
     GoogleSignInClient googleSignInClient;
@@ -48,6 +48,7 @@ public class MyAccount extends AppCompatActivity {
         UserPic = findViewById(R.id.user_pic);
         UserName = findViewById(R.id.user_name);
         logout = findViewById(R.id.logout);
+        Address = findViewById(R.id.tv_my_addresses);
 
         firebaseAuth = FirebaseAuth.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -81,6 +82,13 @@ public class MyAccount extends AppCompatActivity {
                             }
                         });
                 builder.show();
+            }
+        });
+        Address.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MyAccount.this, ViewAddress.class);
+                startActivity(intent);
             }
         });
     }

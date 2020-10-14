@@ -7,9 +7,10 @@
     tools:context=".HomeFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:background="@color/colorPrimary"
+        android:id="@+id/constraintLayout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -40,18 +41,27 @@
 
             <EditText
                 android:id="@+id/input_search"
-                android:focusable="false"
-                android:textCursorDrawable="@null"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@+id/ic_magnify"
                 android:background="@null"
+                android:focusable="false"
                 android:hint="Search for Products, Brands and More"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:maxLines="1"
+                android:textCursorDrawable="@null"
                 android:textSize="15sp" />
         </RelativeLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler__horizontal_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
 </androidx.constraintlayout.widget.ConstraintLayout>

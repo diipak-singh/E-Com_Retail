@@ -1,11 +1,13 @@
 package com.example.e_comretail;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -13,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.e_comretail.Adapter.AllCategoryAdapter;
 import com.example.e_comretail.Details.AllCategoryDetails;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,6 +45,20 @@ public class AllCategory extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycler_category);
         RecyclerView.LayoutManager manager = new GridLayoutManager(this, 3);
         recyclerView.setLayoutManager(manager);
+
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Intent intent = new Intent(AllCategory.this, SubCategory.class);
+                intent.putExtra("SubCategory", list.get(position).getCategoryname());
+                startActivity(intent);
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+        }));
     }
 
     @Override
@@ -58,6 +75,7 @@ public class AllCategory extends AppCompatActivity {
                         }
                         AllCategoryAdapter allCategoryAdapter = new AllCategoryAdapter(list, AllCategory.this);
                         recyclerView.setAdapter(allCategoryAdapter);
+                        allCategoryAdapter.notifyDataSetChanged();
                     }
                 }
 

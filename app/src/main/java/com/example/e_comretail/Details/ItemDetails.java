@@ -1,12 +1,12 @@
 package com.example.e_comretail.Details;
 
 public class ItemDetails {
-    private String itemName, itemPrice, itemDesc, imageUrl, imageUrl2,imageUrl3, imageUrl4, imageUrl5, imageUrl6, stock, offer, discount, offerdate, offerendhour, offerendminute, costprice, itemdate, itemcode, isCertified, hsncode, gstrate, category, sub_category, gender, mrpprice, companyname, itemId;
+    private String itemName, itemPrice, itemDesc, imageUrl, imageUrl2,imageUrl3, imageUrl4, imageUrl5, imageUrl6, stock, offer, discount, offerdate, offerendhour, offerendminute, costprice, itemdate, itemcode, isCertified, hsncode, gstrate, category, sub_category, gender, mrpprice, companyname, measurement, itemId;
 
     public ItemDetails() {
     }
 
-    public ItemDetails(String itemName, String itemPrice, String itemDesc, String imageUrl, String imageUrl2, String imageUrl3, String imageUrl4, String imageUrl5, String imageUrl6, String stock, String offer, String discount, String offerdate, String offerendhour, String offerendminute, String costprice, String itemdate, String itemcode, String isCertified, String hsncode, String gstrate, String category, String sub_category, String gender, String mrpprice, String companyname, String itemId) {
+    public ItemDetails(String itemName, String itemPrice, String itemDesc, String imageUrl, String imageUrl2, String imageUrl3, String imageUrl4, String imageUrl5, String imageUrl6, String stock, String offer, String discount, String offerdate, String offerendhour, String offerendminute, String costprice, String itemdate, String itemcode, String isCertified, String hsncode, String gstrate, String category, String sub_category, String gender, String mrpprice, String companyname, String measurement, String itemId) {
         this.itemName = itemName;
         this.itemPrice = itemPrice;
         this.itemDesc = itemDesc;
@@ -33,6 +33,7 @@ public class ItemDetails {
         this.gender = gender;
         this.mrpprice = mrpprice;
         this.companyname = companyname;
+        this.measurement = measurement;
         this.itemId = itemId;
     }
 
@@ -242,6 +243,14 @@ public class ItemDetails {
 
     public void setCompanyname(String companyname) {
         this.companyname = companyname;
+    }
+
+    public String getMeasurement() {
+        return measurement;
+    }
+
+    public void setMeasurement(String measurement) {
+        this.measurement = measurement;
     }
 
     public String getItemId() {
