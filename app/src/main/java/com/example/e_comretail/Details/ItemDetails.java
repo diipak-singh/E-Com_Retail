@@ -1,12 +1,12 @@
 package com.example.e_comretail.Details;
 
 public class ItemDetails {
-    private String itemName, itemPrice, itemDesc, imageUrl, imageUrl2,imageUrl3, imageUrl4, imageUrl5, imageUrl6, stock, offer, discount, offerdate, offerendhour, offerendminute, costprice, itemdate, itemcode, isCertified, hsncode, gstrate, category, sub_category, gender, mrpprice, companyname, measurement, itemId;
+    private String itemName, itemPrice, itemDesc, imageUrl, imageUrl2,imageUrl3, imageUrl4, imageUrl5, imageUrl6, stock,  discount, costprice, itemdate, itemcode, isCertified, hsncode, gstrate, category, sub_category, gender, mrpprice, companyname, measurement, itemId;
 
     public ItemDetails() {
     }
 
-    public ItemDetails(String itemName, String itemPrice, String itemDesc, String imageUrl, String imageUrl2, String imageUrl3, String imageUrl4, String imageUrl5, String imageUrl6, String stock, String offer, String discount, String offerdate, String offerendhour, String offerendminute, String costprice, String itemdate, String itemcode, String isCertified, String hsncode, String gstrate, String category, String sub_category, String gender, String mrpprice, String companyname, String measurement, String itemId) {
+    public ItemDetails(String itemName, String itemPrice, String itemDesc, String imageUrl, String imageUrl2, String imageUrl3, String imageUrl4, String imageUrl5, String imageUrl6, String stock, String discount, String costprice, String itemdate, String itemcode, String isCertified, String hsncode, String gstrate, String category, String sub_category, String gender, String mrpprice, String companyname, String measurement, String itemId) {
         this.itemName = itemName;
         this.itemPrice = itemPrice;
         this.itemDesc = itemDesc;
@@ -17,11 +17,7 @@ public class ItemDetails {
         this.imageUrl5 = imageUrl5;
         this.imageUrl6 = imageUrl6;
         this.stock = stock;
-        this.offer = offer;
         this.discount = discount;
-        this.offerdate = offerdate;
-        this.offerendhour = offerendhour;
-        this.offerendminute = offerendminute;
         this.costprice = costprice;
         this.itemdate = itemdate;
         this.itemcode = itemcode;
@@ -117,44 +113,12 @@ public class ItemDetails {
         this.stock = stock;
     }
 
-    public String getOffer() {
-        return offer;
-    }
-
-    public void setOffer(String offer) {
-        this.offer = offer;
-    }
-
     public String getDiscount() {
         return discount;
     }
 
     public void setDiscount(String discount) {
         this.discount = discount;
-    }
-
-    public String getOfferdate() {
-        return offerdate;
-    }
-
-    public void setOfferdate(String offerdate) {
-        this.offerdate = offerdate;
-    }
-
-    public String getOfferendhour() {
-        return offerendhour;
-    }
-
-    public void setOfferendhour(String offerendhour) {
-        this.offerendhour = offerendhour;
-    }
-
-    public String getOfferendminute() {
-        return offerendminute;
-    }
-
-    public void setOfferendminute(String offerendminute) {
-        this.offerendminute = offerendminute;
     }
 
     public String getCostprice() {

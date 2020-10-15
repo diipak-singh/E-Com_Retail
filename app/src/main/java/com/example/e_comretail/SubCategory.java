@@ -3,7 +3,6 @@ package com.example.e_comretail;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -48,7 +47,9 @@ public class SubCategory extends AppCompatActivity {
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Intent intent = new Intent(SubCategory.this, MainItemDisplay.class);
+                Intent intent = new Intent(SubCategory.this, ItemListDisplay.class);
+                intent.putExtra("Category", list.get(position).getCategoryName());
+                intent.putExtra("SubCategory", list.get(position).getSubCategoryName());
                 startActivity(intent);
             }
 
@@ -65,26 +66,16 @@ public class SubCategory extends AppCompatActivity {
         if (ref != null) {
             ref.addValueEventListener(new ValueEventListener() {
                 @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    ref.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists()) {
-                                list = new ArrayList<>();
-                                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                                    list.add(ds.getValue(SubCategoryDetails.class));
-                                }
-                                SubCategoryAdapter subCategoryAdapter = new SubCategoryAdapter(list, SubCategory.this);
-                                recyclerView.setAdapter(subCategoryAdapter);
-                                subCategoryAdapter.notifyDataSetChanged();
-                            }
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        list = new ArrayList<>();
+                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                            list.add(ds.getValue(SubCategoryDetails.class));
                         }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
+                        SubCategoryAdapter subCategoryAdapter = new SubCategoryAdapter(list, SubCategory.this);
+                        recyclerView.setAdapter(subCategoryAdapter);
+                        subCategoryAdapter.notifyDataSetChanged();
+                    }
                 }
 
                 @Override
@@ -94,6 +85,7 @@ public class SubCategory extends AppCompatActivity {
             });
         }
     }
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();

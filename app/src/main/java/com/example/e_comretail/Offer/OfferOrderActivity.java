@@ -28,6 +28,7 @@ public class OfferOrderActivity extends AppCompatActivity {
     private ArrayList<AddressDetails> addressList;
     private DatabaseReference ref;
     private TextView Address, Landmark, City, State, Zip, Phone;
+    private TextView itemName, measurement, quantity, totalPrice, discount, amountPayable;
     private CardView addressCard;
     private Button shippingAddress;
 
@@ -35,6 +36,14 @@ public class OfferOrderActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_offer_order);
+        Intent intent = getIntent();
+        String ItemName = intent.getStringExtra("ItemName");
+        String Measurement = intent.getStringExtra("Measurements");
+        String Quantity = intent.getStringExtra("Quantity");
+        String TotalPrice = intent.getStringExtra("TotalPrice");
+        String Discount = intent.getStringExtra("Discount");
+        String AmountPayable = intent.getStringExtra("AmountPayable");
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Order Summary");
         setSupportActionBar(toolbar);
@@ -50,6 +59,21 @@ public class OfferOrderActivity extends AppCompatActivity {
         Zip = findViewById(R.id.zip);
         Phone = findViewById(R.id.phone);
         addressCard = findViewById(R.id.cardView3);
+
+        itemName = findViewById(R.id.item_name);
+        measurement = findViewById(R.id.item_highlights);
+        quantity = findViewById(R.id.quantity);
+        totalPrice = findViewById(R.id.item_price);
+        discount = findViewById(R.id.discount);
+        amountPayable = findViewById(R.id.amount_payable);
+
+        itemName.setText(ItemName);
+        measurement.setText(Measurement);
+        quantity.setText(Quantity);
+        totalPrice.setText(TotalPrice);
+        discount.setText(Discount);
+        amountPayable.setText(AmountPayable);
+
         addressCard.setVisibility(View.GONE);
         shippingAddress = findViewById(R.id.shipping_address);
         shippingAddress.setText("Change Shipping Address");

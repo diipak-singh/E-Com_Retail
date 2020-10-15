@@ -1,23 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:focusable="true"
-    android:clickable="true"
-    android:foreground="?android:attr/selectableItemBackground"
-    android:layout_marginEnd="10dp"
-    android:layout_marginStart="10dp"
-    android:layout_marginTop="10dp"
-    android:clipToPadding="true"
-    android:elevation="4dp"
-    app:cardCornerRadius="10dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="4dp"
+    android:clickable="true"
+    android:elevation="5dp"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground">
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_margin="5dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
 
         <ImageView
             android:id="@+id/imageView2"
@@ -71,8 +65,8 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:text="offer"
-            android:textStyle="bold"
             android:textColor="#4CAF50"
+            android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/actual_price"
             app:layout_constraintTop_toBottomOf="@+id/product_name" />
 
@@ -83,9 +77,9 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:textSize="16sp"
-            android:textColor="#F44336"
             android:text="Offer ends on date"
+            android:textColor="#F44336"
+            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageView2"
             app:layout_constraintTop_toBottomOf="@+id/final_price" />

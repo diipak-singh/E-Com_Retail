@@ -1,4 +1,7 @@
-package com.example.e_comretail.Offer;
+package com.example.e_comretail;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.graphics.Paint;
@@ -6,47 +9,41 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import com.bumptech.glide.Glide;
 import com.example.e_comretail.Details.ItemDetails;
-import com.example.e_comretail.R;
+import com.example.e_comretail.Offer.OfferItemsDisplay;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ImageListener;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class OfferItemsDisplay extends AppCompatActivity {
+public class MainItemDsiplay extends AppCompatActivity {
+
     private ArrayList<ItemDetails> list;
 
-    private TextView itemName, itemPrice, itemFinalPrice, offer, description, measurement, Stock, QuantityText;
+    private TextView itemName, itemPrice, itemFinalPrice, discount, description, measurement, Stock, QuantityText;
     private CarouselView carouselView;
     private ImageView isCertifeid;
     private Button buyNow;
-    private Spinner quantity;
-
-    String[] strQuantity = new String[]{"1", "2", "3"};
-
+    private EditText quantity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_offer_items_display);
-
+        setContentView(R.layout.activity_main_item_dsiplay);
         Intent intent = getIntent();
-        final String ItemName = intent.getStringExtra("ItemName");
+        String ItemName = intent.getStringExtra("ItemName");
         String ItemPrice = intent.getStringExtra("ItemPrice");
         String Gst = intent.getStringExtra("Gst");
-        String Offer = intent.getStringExtra("Offer");
         String Desc = intent.getStringExtra("Desc");
         String IsCertified = intent.getStringExtra("IsCertified");
-        final String Measurement = intent.getStringExtra("Measurement");
+        String Measurement = intent.getStringExtra("Measurement");
         String Discount = intent.getStringExtra("Discount");
         String stock = intent.getStringExtra("Stock");
         final ArrayList<String> imageList = intent.getStringArrayListExtra("images");
@@ -55,26 +52,21 @@ public class OfferItemsDisplay extends AppCompatActivity {
         int stock1 = Integer.parseInt(stock);
 
         //Some Calculation to get final product price
-        int gstRate1 = Integer.valueOf(Gst);
-        int ProductOffer1 = Integer.valueOf(Offer);
-        int ProdcutDiscount = Integer.valueOf(Discount);
-        int ProductActualPrice1 = Integer.valueOf(ItemPrice);
-        final int PriceAfterGst = ProductActualPrice1 + (ProductActualPrice1 * gstRate1 / 100);
+        Double gstRate1 = Double.valueOf(Gst);
+        Double ProdcutDiscount = Double.valueOf(Discount);
+        Double ProductActualPrice1 = Double.valueOf(ItemPrice);
+        int PriceAfterGst = (int) (ProductActualPrice1 + (ProductActualPrice1 * gstRate1 / 100));
         int PriceAfterDiscount = (int) (PriceAfterGst - (PriceAfterGst * ProdcutDiscount / 100));
-        int ProductFinalPrice = (int) (PriceAfterDiscount - (PriceAfterDiscount * ProductOffer1 / 100));
-
-        final int DiscountInRupee = (int) (PriceAfterGst - ProductFinalPrice);
 
         //Storing final product price in String to show in textview
-        final String ProductFinalPrice1 = String.valueOf(ProductFinalPrice);
         String PriceAfterDiscount1 = String.valueOf(PriceAfterDiscount);
-        final String PriceAfterGst1 = String.valueOf(PriceAfterGst);
+        String PriceAfterGst1 = String.valueOf(PriceAfterGst);
 
         itemName = findViewById(R.id.product_name);
         itemPrice = findViewById(R.id.product_price);
         itemPrice.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         itemFinalPrice = findViewById(R.id.product_final_price);
-        offer = findViewById(R.id.offer);
+        discount = findViewById(R.id.discount);
         description = findViewById(R.id.description);
         isCertifeid = findViewById(R.id.certified);
         measurement = findViewById(R.id.measurement);
@@ -91,7 +83,7 @@ public class OfferItemsDisplay extends AppCompatActivity {
         carouselView.setImageListener(new ImageListener() {
             @Override
             public void setImageForPosition(int position, ImageView imageView) {
-                Glide.with(OfferItemsDisplay.this)
+                Glide.with(MainItemDsiplay.this)
                         .load(imageList.get(position))
                         .into(imageView);
             }
@@ -101,7 +93,6 @@ public class OfferItemsDisplay extends AppCompatActivity {
         } else {
             isCertifeid.setVisibility(View.GONE);
         }
-
         if (stock1 > 0) {
             Stock.setText("In Stock");
             Stock.setTextColor(getResources().getColor(R.color.inStock));
@@ -116,13 +107,10 @@ public class OfferItemsDisplay extends AppCompatActivity {
             QuantityText.setVisibility(View.INVISIBLE);
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, strQuantity);
-        quantity.setAdapter(adapter);
-
         itemName.setText(ItemName);
-        itemPrice.setText(PriceAfterDiscount1);
-        itemFinalPrice.setText("₹" + ProductFinalPrice1);
-        offer.setText(Offer + "%");
+        itemPrice.setText(PriceAfterGst1);
+        itemFinalPrice.setText("₹" + PriceAfterDiscount1);
+        discount.setText(Discount + "%");
         description.setText(Desc);
         measurement.setText(Measurement);
 
@@ -131,27 +119,5 @@ public class OfferItemsDisplay extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        buyNow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String finalQuantity = quantity.getSelectedItem().toString().trim();
-                String DiscountInRupee1 = String.valueOf(DiscountInRupee);
-                Intent intent = new Intent(OfferItemsDisplay.this, OfferOrderActivity.class);
-                intent.putExtra("ItemName", ItemName);
-                intent.putExtra("Measurements", Measurement);
-                intent.putExtra("Quantity", finalQuantity);
-                intent.putExtra("TotalPrice", PriceAfterGst1);
-                intent.putExtra("Discount", DiscountInRupee1);
-                intent.putExtra("AmountPayable", ProductFinalPrice1);
-                startActivity(intent);
-            }
-        });
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
     }
 }

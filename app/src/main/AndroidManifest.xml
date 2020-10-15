@@ -12,7 +12,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Offer.OfferOrderActivity"></activity>
+        <activity android:name=".MainItemDsiplay"></activity>
+        <activity android:name=".ItemListDisplay" />
+        <activity android:name=".Adapter.ItemListDisplay" />
+        <activity android:name=".Offer.OfferOrderActivity" />
         <activity android:name=".AddNewAddress" />
         <activity android:name=".ViewAddress" />
         <activity android:name=".AddAddress" />

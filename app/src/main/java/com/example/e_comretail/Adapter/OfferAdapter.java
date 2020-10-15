@@ -43,10 +43,10 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.ViewHolder> 
         String gstRate = list.get(position).getGstrate().trim();
 
         // Some Calculation to get final product price
-        Double gstRate1 = Double.valueOf(gstRate);
-        Double ProductOffer1 = Double.valueOf(ProductOffer);
-        Double ProductActualPrice1 = Double.valueOf(ProductActualPrice);
-        Double PriceAfterGst = ProductActualPrice1 + (ProductActualPrice1 * gstRate1 / 100);
+        int gstRate1 = Integer.valueOf(gstRate);
+        int ProductOffer1 = Integer.valueOf(ProductOffer);
+        int ProductActualPrice1 = Integer.valueOf(ProductActualPrice);
+        int PriceAfterGst = ProductActualPrice1 + (ProductActualPrice1 * gstRate1 / 100);
         int ProductFinalPrice = (int) (PriceAfterGst - (PriceAfterGst * ProductOffer1 / 100));
 
         // Storing final product price in String to show in textview
