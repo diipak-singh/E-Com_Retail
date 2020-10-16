@@ -321,7 +321,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <RadioButton
-                android:id="@+id/upi_payment"
+                android:id="@+id/radio_upi_payment"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -329,11 +329,12 @@
                 android:layout_marginEnd="8dp"
                 android:text="UPI Payment"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
             <RadioButton
-                android:id="@+id/cash_on_delivery"
+                android:id="@+id/radio_cash_on_delivery"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -344,12 +345,12 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/upi_payment" />
+                app:layout_constraintTop_toBottomOf="@+id/radio_upi_payment" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
     <Button
-        android:id="@+id/place_order"
+        android:id="@+id/button_place_order"
         android:text="Confirm Order"
         android:layout_margin="5dp"
         android:backgroundTint="#F44336"
