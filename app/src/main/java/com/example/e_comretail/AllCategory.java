@@ -39,12 +39,9 @@ public class AllCategory extends AppCompatActivity {
         toolbar.setTitle("All Categories");
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
         ref = FirebaseDatabase.getInstance().getReference().child("Category/");
         ref.keepSynced(true);
         recyclerView = findViewById(R.id.recycler_category);
-        RecyclerView.LayoutManager manager = new GridLayoutManager(this, 3);
-        recyclerView.setLayoutManager(manager);
 
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
@@ -91,4 +88,5 @@ public class AllCategory extends AppCompatActivity {
         onBackPressed();
         return true;
     }
+
 }

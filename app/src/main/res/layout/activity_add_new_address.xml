@@ -190,6 +190,7 @@
             android:inputType="number"
             android:maxEms="10"
             android:maxLines="1"
+            android:maxLength="6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Zip" />

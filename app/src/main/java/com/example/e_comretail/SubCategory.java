@@ -34,7 +34,6 @@ public class SubCategory extends AppCompatActivity {
         String SubCategory = intent.getStringExtra("SubCategory");
 
         ref = FirebaseDatabase.getInstance().getReference().child("Sub Category/" + SubCategory);
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(SubCategory);
         setSupportActionBar(toolbar);
@@ -42,8 +41,6 @@ public class SubCategory extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         recyclerView = findViewById(R.id.recycler_category);
-        RecyclerView.LayoutManager manager = new GridLayoutManager(this, 2);
-        recyclerView.setLayoutManager(manager);
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {

@@ -37,29 +37,24 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull OfferAdapter.ViewHolder holder, int position) {
         String ProductImage = list.get(position).getImageUrl();
         String ProductName = list.get(position).getItemName();
-        String ProductActualPrice = list.get(position).getItemPrice();
-        String ProductOffer = list.get(position).getOffer();
+        String ItemPrice = list.get(position).getItemPrice();
+        String Offer = list.get(position).getOffer();
         String OfferEndDate = list.get(position).getOfferdate();
-        String gstRate = list.get(position).getGstrate().trim();
+        String Gst = list.get(position).getGstrate().trim();
+        String Discount = list.get(position).getDiscount();
 
         // Some Calculation to get final product price
-        int gstRate1 = Integer.valueOf(gstRate);
-        int ProductOffer1 = Integer.valueOf(ProductOffer);
-        int ProductActualPrice1 = Integer.valueOf(ProductActualPrice);
-        int PriceAfterGst = ProductActualPrice1 + (ProductActualPrice1 * gstRate1 / 100);
-        int ProductFinalPrice = (int) (PriceAfterGst - (PriceAfterGst * ProductOffer1 / 100));
-
-        // Storing final product price in String to show in textview
-        String ProductFinalPrice1 = String.valueOf(ProductFinalPrice);
-        String PriceAfterGst1 = String.valueOf(PriceAfterGst);
+        int ItemPriceAftrGst = Integer.parseInt(ItemPrice) + (Integer.parseInt(ItemPrice) * Integer.parseInt(Gst) / 100);
+        int ItemPriceAftrDiscount = ItemPriceAftrGst - (ItemPriceAftrGst * Integer.parseInt(Discount) / 100);
+        int itemPriceAfterOffer = ItemPriceAftrDiscount - (ItemPriceAftrDiscount * Integer.parseInt(Offer) / 100);
 
         // placing values in holder
         Glide.with(context).load(ProductImage).into(holder.productImage);
         holder.productName.setText(ProductName);
-        holder.productFinalPrice.setText("₹" + ProductFinalPrice1);
-        holder.productActualPrice.setText(PriceAfterGst1);
-        holder.productActualPrice.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-        holder.productOffer.setText(ProductOffer + "%");
+        holder.productFinalPrice.setText("₹" + String.valueOf(itemPriceAfterOffer));
+        holder.productPrice.setText(String.valueOf(ItemPriceAftrDiscount));
+        holder.productPrice.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+        holder.productOffer.setText(Offer + "%");
         holder.offerEndDate.setText("Offer Ends On: " + OfferEndDate);
     }
 
@@ -70,13 +65,13 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.ViewHolder> 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView productImage;
-        private TextView productName, productActualPrice, productOffer, productFinalPrice, offerEndDate;
+        private TextView productName, productPrice, productOffer, productFinalPrice, offerEndDate;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             productImage = itemView.findViewById(R.id.imageView2);
             productName = itemView.findViewById(R.id.product_name);
-            productActualPrice = itemView.findViewById(R.id.actual_price);
+            productPrice = itemView.findViewById(R.id.actual_price);
             productFinalPrice = itemView.findViewById(R.id.final_price);
             productOffer = itemView.findViewById(R.id.offer);
             offerEndDate = itemView.findViewById(R.id.offer_end_date);

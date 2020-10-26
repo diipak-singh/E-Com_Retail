@@ -74,6 +74,7 @@ public class OfferActivity extends AppCompatActivity {
                 String Measurement = list.get(position).getMeasurement();
                 String Discount = list.get(position).getDiscount();
                 String Stock = list.get(position).getStock();
+                String ItemCode = list.get(position).getItemcode();
 
                 Intent intent = new Intent(OfferActivity.this, OfferItemsDisplay.class);
                 intent.putExtra("ItemName", ItemName);
@@ -85,6 +86,9 @@ public class OfferActivity extends AppCompatActivity {
                 intent.putExtra("Measurement", Measurement);
                 intent.putExtra("Discount", Discount);
                 intent.putExtra("Stock", Stock);
+                intent.putExtra("ItemCode", ItemCode);
+                intent.putExtra("HsnCode", list.get(position).getHsncode());
+                intent.putExtra("GstRate", list.get(position).getGstrate());
                 intent.putStringArrayListExtra("images", imageList);
                 startActivity(intent);
             }
@@ -118,40 +122,15 @@ public class OfferActivity extends AppCompatActivity {
                                 ref.child(list.get(i).getItemId()).removeValue();
                             }
                         }
+                        OfferAdapter offerAdapter = new OfferAdapter(list, OfferActivity.this);
+                        recyclerView.setAdapter(offerAdapter);
+                        offerAdapter.notifyDataSetChanged();
                     }
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
                     Toast.makeText(OfferActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
-            ref.addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                    OfferAdapter offerAdapter = new OfferAdapter(list, OfferActivity.this);
-                    recyclerView.setAdapter(offerAdapter);
-                    offerAdapter.notifyDataSetChanged();
-                }
-
-                @Override
-                public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-                }
-
-                @Override
-                public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-                }
-
-                @Override
-                public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
                 }
             });
         }
