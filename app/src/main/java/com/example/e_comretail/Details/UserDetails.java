@@ -1,20 +1,32 @@
 package com.example.e_comretail.Details;
 
 public class UserDetails {
-    private String username, user_mobile, user_address, user_city, user_state, user_mail, user_birthday, itemId;
+    private String userImage, userMail, username, userUID;
 
     public UserDetails() {
     }
 
-    public UserDetails(String username, String user_mobile, String user_address, String user_city, String user_state, String user_mail, String user_birthday, String itemId) {
+    public UserDetails(String userImage, String userMail, String username, String userUID) {
+        this.userImage = userImage;
+        this.userMail = userMail;
         this.username = username;
-        this.user_mobile = user_mobile;
-        this.user_address = user_address;
-        this.user_city = user_city;
-        this.user_state = user_state;
-        this.user_mail = user_mail;
-        this.user_birthday = user_birthday;
-        this.itemId = itemId;
+        this.userUID = userUID;
+    }
+
+    public String getUserImage() {
+        return userImage;
+    }
+
+    public void setUserImage(String userImage) {
+        this.userImage = userImage;
+    }
+
+    public String getUserMail() {
+        return userMail;
+    }
+
+    public void setUserMail(String userMail) {
+        this.userMail = userMail;
     }
 
     public String getUsername() {
@@ -25,59 +37,11 @@ public class UserDetails {
         this.username = username;
     }
 
-    public String getUser_mobile() {
-        return user_mobile;
+    public String getUserUID() {
+        return userUID;
     }
 
-    public void setUser_mobile(String user_mobile) {
-        this.user_mobile = user_mobile;
-    }
-
-    public String getUser_address() {
-        return user_address;
-    }
-
-    public void setUser_address(String user_address) {
-        this.user_address = user_address;
-    }
-
-    public String getUser_city() {
-        return user_city;
-    }
-
-    public void setUser_city(String user_city) {
-        this.user_city = user_city;
-    }
-
-    public String getUser_state() {
-        return user_state;
-    }
-
-    public void setUser_state(String user_state) {
-        this.user_state = user_state;
-    }
-
-    public String getUser_mail() {
-        return user_mail;
-    }
-
-    public void setUser_mail(String user_mail) {
-        this.user_mail = user_mail;
-    }
-
-    public String getUser_birthday() {
-        return user_birthday;
-    }
-
-    public void setUser_birthday(String user_birthday) {
-        this.user_birthday = user_birthday;
-    }
-
-    public String getItemId() {
-        return itemId;
-    }
-
-    public void setItemId(String itemId) {
-        this.itemId = itemId;
+    public void setUserUID(String userUID) {
+        this.userUID = userUID;
     }
 }

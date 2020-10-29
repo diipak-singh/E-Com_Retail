@@ -26,4 +26,6 @@
     <string name="slide_3_title">Slide 3 Title</string>
     <string name="slide_3_desc">Slide 3 Description.</string>
     <string name="search_act">Search for any Product</string>
+    <string name="ImportantNote">*Note: Total Items is not the quantity of the items you mentioned on previous page!</string>
+    <string name="address_notice">*Important: To add new address remove current address by long pressing on it!</string>
 </resources>

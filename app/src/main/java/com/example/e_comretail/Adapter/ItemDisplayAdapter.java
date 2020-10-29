@@ -35,25 +35,19 @@ public class ItemDisplayAdapter extends RecyclerView.Adapter<ItemDisplayAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ItemDisplayAdapter.ViewHolder holder, int position) {
+        String ItemPrice = list.get(position).getItemPrice();
+        String Gst = list.get(position).getGstrate();
+        String Discount = list.get(position).getDiscount();
+        //some calculation
+        int ItemPriceAftrGst = Integer.parseInt(ItemPrice) + (Integer.parseInt(ItemPrice) * Integer.parseInt(Gst) / 100);
+        int ItemPriceAftrDiscount = ItemPriceAftrGst - (ItemPriceAftrGst * Integer.parseInt(Discount) / 100);
+
         Glide.with(context).load(list.get(position).getImageUrl()).into(holder.itemPhoto);
         holder.itemName.setText(list.get(position).getItemName());
         holder.measurement.setText(list.get(position).getMeasurement());
-
-        String Gst = list.get(position).getGstrate();
-        Double Gst1 = Double.valueOf(Gst);
-
-        String itemPrice = list.get(position).getItemPrice();
-        Double itemPrice1 = Double.valueOf(itemPrice);
-
-        String Discount = list.get(position).getDiscount();
-        Double Discount1 = Double.valueOf(Discount);
-
-        int PriceAfterGst = (int) (itemPrice1 + (itemPrice1 * Gst1 / 100));
-        int FinalPrice = (int) (PriceAfterGst - (PriceAfterGst * Discount1 / 100));
-
-        holder.actualPrice.setText(String.valueOf(PriceAfterGst));
+        holder.actualPrice.setText(String.valueOf(ItemPriceAftrGst));
         holder.actualPrice.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-        holder.finalPrice.setText("₹" + String.valueOf(FinalPrice));
+        holder.finalPrice.setText("₹" + String.valueOf(ItemPriceAftrDiscount));
         holder.discount.setText(Discount + "%");
     }
 

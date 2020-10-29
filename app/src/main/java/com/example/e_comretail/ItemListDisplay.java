@@ -10,9 +10,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.e_comretail.Adapter.ItemDisplayAdapter;
-import com.example.e_comretail.Adapter.SubCategoryAdapter;
 import com.example.e_comretail.Details.ItemDetails;
-import com.example.e_comretail.Details.SubCategoryDetails;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,16 +24,18 @@ public class ItemListDisplay extends AppCompatActivity {
     private DatabaseReference ref;
     private ArrayList<ItemDetails> list;
     private RecyclerView recyclerView;
+    String Category;
+    String SubCategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_list_display);
         Intent intent = getIntent();
-        String Category = intent.getStringExtra("Category");
-        String SubCategory = intent.getStringExtra("SubCategory");
+        Category = intent.getStringExtra("Category");
+        SubCategory = intent.getStringExtra("SubCategory");
         assert SubCategory != null;
-        ref = FirebaseDatabase.getInstance().getReference().child("Items/" + Category).child(SubCategory);
+        ref = FirebaseDatabase.getInstance().getReference().child("All Items/");
         ref.keepSynced(true);
         initList();
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -70,6 +70,8 @@ public class ItemListDisplay extends AppCompatActivity {
                 String Measurement = list.get(position).getMeasurement();
                 String Discount = list.get(position).getDiscount();
                 String Stock = list.get(position).getStock();
+                String ItemCode = list.get(position).getItemcode();
+
                 Intent intent = new Intent(ItemListDisplay.this, MainItemDsiplay.class);
                 intent.putExtra("ItemName", ItemName);
                 intent.putExtra("ItemPrice", ItemPrice);
@@ -79,6 +81,8 @@ public class ItemListDisplay extends AppCompatActivity {
                 intent.putExtra("Measurement", Measurement);
                 intent.putExtra("Discount", Discount);
                 intent.putExtra("Stock", Stock);
+                intent.putExtra("ItemCode", ItemCode);
+                intent.putExtra("HsnCode", list.get(position).getHsncode());
                 intent.putStringArrayListExtra("images", imageList);
                 startActivity(intent);
             }
@@ -101,9 +105,10 @@ public class ItemListDisplay extends AppCompatActivity {
             ref.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()){
+                    if (dataSnapshot.exists()) {
                         list = new ArrayList<>();
                         for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                            if (ds.getValue(ItemDetails.class).getCategory().equals(Category) && ds.getValue(ItemDetails.class).getSub_category().equals(SubCategory))
                             list.add(ds.getValue(ItemDetails.class));
                         }
                         ItemDisplayAdapter itemDisplayAdapter = new ItemDisplayAdapter(list, ItemListDisplay.this);

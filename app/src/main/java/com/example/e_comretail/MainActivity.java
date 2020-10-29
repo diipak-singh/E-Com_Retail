@@ -1,7 +1,9 @@
 package com.example.e_comretail;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,10 +19,13 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.e_comretail.Details.UserDetails;
 import com.example.e_comretail.Offer.OfferActivity;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -79,7 +84,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(intent2);
                 break;
             case R.id.nav_my_order:
-                Toast.makeText(this, "My Orders", Toast.LENGTH_SHORT).show();
+                Intent intent3 = new Intent(MainActivity.this, OrderDisplayActivity.class);
+                startActivity(intent3);
+                break;
+            case R.id.nav_my_cart:
+                Intent intent4 = new Intent(MainActivity.this, CartActivity.class);
+                startActivity(intent4);
                 break;
             case R.id.nav_wishlist:
                 Toast.makeText(this, "Wishlist", Toast.LENGTH_SHORT).show();
@@ -87,6 +97,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_account:
                 Intent intent1 = new Intent(MainActivity.this, MyAccount.class);
                 startActivity(intent1);
+                break;
+            case R.id.nav_contact:
+                UploadUserDetails();
+                Intent intent5 = new Intent(MainActivity.this, ChatActivity.class);
+                startActivity(intent5);
                 break;
         }
         drawer.closeDrawer(GravityCompat.START);
@@ -107,19 +122,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void checkLogin() {
         if (user != null) {
-            String userName= user.getDisplayName();
-            String lastName = "";
-            String firstName= "";
-            if(userName.split("\\w+").length>1){
 
-                lastName = userName.substring(userName.lastIndexOf(" ")+1);
+            String userName = user.getDisplayName();
+            String lastName = "";
+            String firstName = "";
+            if (userName.split("\\w+").length > 1) {
+
+                lastName = userName.substring(userName.lastIndexOf(" ") + 1);
                 firstName = userName.substring(0, userName.lastIndexOf(' '));
-            }
-            else{
+            } else {
                 firstName = userName;
             }
 
-            navUsername.setText("Hello, "+firstName);
+            navUsername.setText("Hello, " + firstName);
             Glide.with(this)
                     .load(user.getPhotoUrl())
                     .apply(RequestOptions.circleCropTransform())
@@ -128,6 +143,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             navUsername.setText(R.string.app_name);
         }
     }
+
+    public void UploadUserDetails() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("User Details");
+        String photo = String.valueOf(user.getPhotoUrl());
+        UserDetails userDetails = new UserDetails(photo, user.getEmail(), user.getDisplayName(), user.getUid());
+        reference.child(user.getUid()).setValue(userDetails);
+
+    }
+
     @Override
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
