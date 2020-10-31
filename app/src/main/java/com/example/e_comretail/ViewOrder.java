@@ -6,16 +6,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.example.e_comretail.Details.OrderDetails;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.Objects;
 
@@ -68,7 +63,7 @@ public class ViewOrder extends AppCompatActivity {
         itemName = findViewById(R.id.item_name);
         hsnCode = findViewById(R.id.hsn_code);
         quantity = findViewById(R.id.quantity);
-        totalAmount = findViewById(R.id.amount_payable);
+        totalAmount = findViewById(R.id.amount_payable_show);
         itemHighlights = findViewById(R.id.item_highlights);
 
         userName.setText(UserName);

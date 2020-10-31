@@ -1,6 +1,8 @@
 package com.example.e_comretail.Details;
 
-public class CartDetails {
+import java.io.Serializable;
+
+public class CartDetails implements Serializable {
     private String itemCode, stock, itemName, itemPrice, measurement, itemQuantity, discount, AmountPayable, itemImage, itemId;
 
 

@@ -67,7 +67,7 @@ public class ItemDisplayAdapter extends RecyclerView.Adapter<ItemDisplayAdapter.
             measurement = itemView.findViewById(R.id.measurement);
             finalPrice = itemView.findViewById(R.id.final_price);
             actualPrice = itemView.findViewById(R.id.actual_price);
-            discount = itemView.findViewById(R.id.discount);
+            discount = itemView.findViewById(R.id.cart_total_show);
         }
     }
 }

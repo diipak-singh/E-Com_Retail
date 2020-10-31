@@ -47,7 +47,7 @@ public class ViewPagerAdapter extends PagerAdapter {
         measurement = view.findViewById(R.id.measurement);
         finalPrice = view.findViewById(R.id.final_price);
         actualPrice = view.findViewById(R.id.actual_price);
-        discount = view.findViewById(R.id.discount);
+        discount = view.findViewById(R.id.cart_total_show);
 
         String ItemPrice = list.get(position).getItemPrice();
         String Gst = list.get(position).getGstrate();

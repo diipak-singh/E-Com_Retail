@@ -81,7 +81,7 @@
                 app:layout_constraintTop_toTopOf="@+id/product_final_price" />
 
             <TextView
-                android:id="@+id/discount"
+                android:id="@+id/cart_total_show"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
