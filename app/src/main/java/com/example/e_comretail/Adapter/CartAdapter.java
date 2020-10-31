@@ -71,7 +71,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             measurement = itemView.findViewById(R.id.measurement);
             stock= itemView.findViewById(R.id.stock);
             quantity = itemView.findViewById(R.id.quantity);
-            discount = itemView.findViewById(R.id.discount);
+            discount = itemView.findViewById(R.id.cart_total_show);
             itemprice = itemView.findViewById(R.id.actual_price);
             finalprice = itemView.findViewById(R.id.final_price);
         }

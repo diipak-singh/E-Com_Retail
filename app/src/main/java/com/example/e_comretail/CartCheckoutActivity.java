@@ -1,5 +1,10 @@
 package com.example.e_comretail;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -15,13 +20,9 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
-
 import com.bumptech.glide.Glide;
 import com.example.e_comretail.Details.AddressDetails;
+import com.example.e_comretail.Details.CartDetails;
 import com.example.e_comretail.Details.OrderDetails;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -38,7 +39,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Objects;
 
-public class OrderSummaryActivity extends AppCompatActivity {
+public class CartCheckoutActivity extends AppCompatActivity {
     private ArrayList<AddressDetails> addressList;
     private DatabaseReference ref;
     private TextView Address, Landmark, City, State, Zip, Phone;
@@ -50,36 +51,22 @@ public class OrderSummaryActivity extends AppCompatActivity {
     private ImageView paymentModeGif;
     private RadioButton payViaUPI, payViaCOD;
     private Button place_order;
+
     private final String upiID = "9616727773@upi"; //ToDO: UPI id.
     private final String note = "Paying to E-Com_Retail";
     private final String name = "E-Com_Retail";
     final int UPI_PAYMENT = 0;
-    String AmountPayable, ItemCode, Image, OrderStatus;
-    String HsnCode;
-    String GstRate;
-    String Measurement;
-    String ItemName;
-    String Quantity;
+
+    private ArrayList<CartDetails> cartList;
+    private int totalPayableAmount = 0;
+    int deliveryCharge = 0;
+    private final String INR = "₹";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_order_summary);
-        Intent intent = getIntent();
-        ItemName = intent.getStringExtra("ItemName");
-        Measurement = intent.getStringExtra("Measurements");
-        Quantity = intent.getStringExtra("Quantity");
-        String TotalPrice = intent.getStringExtra("TotalPrice");
-        String Discount = intent.getStringExtra("Discount");
-        AmountPayable = intent.getStringExtra("AmountPayable");
-        String DeliveryCharge = intent.getStringExtra("DeliveryCharge");
-        ItemCode = intent.getStringExtra("ItemCode");
-        HsnCode = intent.getStringExtra("HsnCode");
-        GstRate = intent.getStringExtra("GstRate");
-        String TotalItems = intent.getStringExtra("TotalItems");
-        Image = intent.getStringExtra("Image");
+        setContentView(R.layout.activity_cart_checkout);
 
-        OrderStatus = "Order Placed";
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Order Summary");
         setSupportActionBar(toolbar);
@@ -89,6 +76,9 @@ public class OrderSummaryActivity extends AppCompatActivity {
 
         ref = FirebaseDatabase.getInstance().getReference().child("Address/" + Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
         initAddressList();
+
+        cartList = (ArrayList<CartDetails>) getIntent().getSerializableExtra("cartDetails");
+
 
         payViaUPI = findViewById(R.id.radio_upi_payment);
         payViaCOD = findViewById(R.id.radio_cash_on_delivery);
@@ -107,33 +97,14 @@ public class OrderSummaryActivity extends AppCompatActivity {
         discount = findViewById(R.id.cart_total_show);
         amountPayable = findViewById(R.id.amount_payable_show);
         deliveryCharges = findViewById(R.id.delivery_charges_show);
-        assert DeliveryCharge != null;
-        if (Integer.parseInt(DeliveryCharge) > 0){
-            deliveryCharges.setText("+₹"+DeliveryCharge);
-        } else{
-            deliveryCharges.setText("FREE");
-        }
+
         paymentModeGif = findViewById(R.id.payment_gif);
         Glide.with(this).asGif().load(R.drawable.payment).into(paymentModeGif);
 
         progressBar = findViewById(R.id.progress_circular);
         progressBar.setVisibility(View.GONE);
 
-        totalItems.setText("Total Items: (" + TotalItems + ")");
-        totalPrice.setText("₹" + TotalPrice);
-        discount.setText("-₹" + Discount);
-        amountPayable.setText("₹" + AmountPayable);
-
-        addressCard.setVisibility(View.GONE);
-        shippingAddress = findViewById(R.id.shipping_address);
-        shippingAddress.setText("Change Shipping Address");
-        shippingAddress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(OrderSummaryActivity.this, AddNewAddress.class);
-                startActivity(intent);
-            }
-        });
+        calculateBillingDetails();
 
         payViaCOD.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,20 +121,19 @@ public class OrderSummaryActivity extends AppCompatActivity {
             }
         });
 
-        place_order.setVisibility(View.INVISIBLE);
         place_order.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressBar.setVisibility(View.VISIBLE);
                 if (payViaCOD.isChecked()) {
                     makeOrderCOD();
                 } else if (payViaUPI.isChecked()) {
-                    payUsingUPI(AmountPayable,
+                    payUsingUPI(String.valueOf(totalPayableAmount),
                             upiID,
                             name,
                             note);
                 } else
                     Toast.makeText(getApplicationContext(), "Please select a payment method.", Toast.LENGTH_SHORT).show();
+
             }
         });
     }
@@ -186,8 +156,8 @@ public class OrderSummaryActivity extends AppCompatActivity {
                             State.setText(addressList.get(0).getState());
                             Zip.setText(addressList.get(0).getZip());
                             Phone.setText(addressList.get(0).getPhone());
-                            shippingAddress.setVisibility(View.GONE);
-                            place_order.setVisibility(View.VISIBLE);
+                            /*shippingAddress.setVisibility(View.GONE);
+                            place_order.setVisibility(View.VISIBLE);*/
                         } else {
                             addressCard.setVisibility(View.GONE);
                             shippingAddress.setVisibility(View.VISIBLE);
@@ -209,6 +179,20 @@ public class OrderSummaryActivity extends AppCompatActivity {
         return true;
     }
 
+    private void calculateBillingDetails() {
+        totalItems.setText("Total items: " + cartList.size());
+
+        for (CartDetails cd : cartList) {
+            totalPayableAmount += Integer.parseInt(cd.getAmountPayable());
+        }
+        totalPrice.setText(String.valueOf(INR + totalPayableAmount));
+        if (totalPayableAmount < 500) {
+            deliveryCharge = 30;
+        }
+        deliveryCharges.setText(String.valueOf(deliveryCharge));
+        amountPayable.setText(String.valueOf(totalPayableAmount + deliveryCharge));
+    }
+
     private void payUsingUPI(String amount, String upiId, String name, String note) {
         Uri uri = Uri.parse("upi://pay").buildUpon()
                 .appendQueryParameter("pa", upiId)
@@ -227,7 +211,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
             startActivityForResult(chooser, UPI_PAYMENT);
         } else {
             progressBar.setVisibility(View.INVISIBLE);
-            Toast.makeText(OrderSummaryActivity.this, "No UPI app found, please install one to continue", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CartCheckoutActivity.this, "No UPI app found, please install one to continue", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -261,7 +245,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
     }
 
     private void upiPaymentDataOperation(ArrayList<String> data) {
-        if (isConnectionAvailable(OrderSummaryActivity.this)) {
+        if (isConnectionAvailable(CartCheckoutActivity.this)) {
             String str = data.get(0);
             Log.d("UPIPAY", "upiPaymentDataOperation: " + str);
             String paymentCancel = "";
@@ -284,20 +268,20 @@ public class OrderSummaryActivity extends AppCompatActivity {
 
             if (status.equals("success")) {
                 //Code to handle successful transaction here.
-                Toast.makeText(OrderSummaryActivity.this, "Transaction successful.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CartCheckoutActivity.this, "Transaction successful.", Toast.LENGTH_SHORT).show();
                 makeOrderUPI();
                 //Log.d("UPI", "responseStr: " + approvalRefNo);
             } else if ("Payment cancelled by user.".equals(paymentCancel)) {
-                Toast.makeText(OrderSummaryActivity.this, "Payment cancelled by user.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CartCheckoutActivity.this, "Payment cancelled by user.", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(OrderSummaryActivity.this, "Transaction failed.Please try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CartCheckoutActivity.this, "Transaction failed.Please try again", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(OrderSummaryActivity.this, "Internet connection is not available. Please check and try again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CartCheckoutActivity.this, "Internet connection is not available. Please check and try again", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public static boolean isConnectionAvailable(OrderSummaryActivity context) {
+    public static boolean isConnectionAvailable(CartCheckoutActivity context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager != null) {
             NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();
@@ -315,9 +299,10 @@ public class OrderSummaryActivity extends AppCompatActivity {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("OrderDetails");
 
         final String paidVia = "Paid via UPI.";
-        String itmname = ItemName;
+        final String OrderStatus = "Order Placed";
+         //String itmname = ItemName;
         String totalAmount = amountPayable.getText().toString();
-        String itemQuantity = Quantity;
+        //String itemQuantity = Quantity;
         String orderDate = getCurrentDate();
         String orderTime = getCurrentTime();
         String userName = user != null ? user.getDisplayName() : null;
@@ -329,59 +314,67 @@ public class OrderSummaryActivity extends AppCompatActivity {
         String userCity = City.getText().toString().trim();
         String userState = State.getText().toString().trim();
         String userZip = Zip.getText().toString().trim();
-        String orderId = databaseReference.push().getKey();
-        String itemCode = ItemCode;
+
+       /* String itemCode = ItemCode;
         String image = Image;
         String orderStatus = OrderStatus;
         String orderBill = "";
         String hsnCode = HsnCode;
         String gstRate = GstRate;
-        String measurement = Measurement;
+        String measurement = Measurement;*/
         String EstimatedTime = "2 Days";
 
-        OrderDetails od = new OrderDetails(
-                itmname,
-                itemCode,
-                measurement,
-                image,
-                orderStatus,
-                orderBill,
-                EstimatedTime,
-                totalAmount,
-                hsnCode,
-                gstRate,
-                itemQuantity,
-                orderTime,
-                orderDate,
-                userName,
-                userMail,
-                userPhone,
-                userAddress,
-                userLandMark,
-                userCity,
-                userState,
-                userZip,
-                userID,
-                paidVia,
-                orderId
-        );
-        databaseReference.child(orderId).setValue(od).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isComplete()) {
-                    //ToDo: show dialog here instead of toast.
-                    progressBar.setVisibility(View.INVISIBLE);
-                    Intent intent = new Intent(OrderSummaryActivity.this, AfterOrderActivity.class);
-                    startActivity(intent);
-                    intent.putExtra("Title", "Order Placed!");
-                    intent.putExtra("Desc", "Thanks you for shopping with us! \n your order was placed successfully.");
-                    finish();
-                } else {
-                    progressBar.setVisibility(View.INVISIBLE);
-                    Toast.makeText(getApplicationContext(), task.getException().toString(), Toast.LENGTH_SHORT).show();
+        for (CartDetails cd : cartList) {
+            String orderId = databaseReference.push().getKey();
+
+            OrderDetails od = new OrderDetails(
+                    cd.getItemName(),
+                    cd.getItemCode(),
+                    cd.getMeasurement(),
+                    cd.getItemImage(),
+                    OrderStatus,
+                    "",
+                    EstimatedTime,
+                    String.valueOf(totalPayableAmount),
+                    "hsnCode",//ToDo Update this and GST rate
+                    "gstRate",
+                    cd.getItemQuantity(),
+                    orderTime,
+                    orderDate,
+                    userName,
+                    userMail,
+                    userPhone,
+                    userAddress,
+                    userLandMark,
+                    userCity,
+                    userState,
+                    userZip,
+                    userID,
+                    paidVia,
+                    orderId
+            );
+            databaseReference.child(orderId).setValue(od).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isComplete()) {
+                        Toast.makeText(getApplicationContext(),"Placing Orders...",Toast.LENGTH_SHORT).show();
+                        //ToDo: show dialog here instead of toast.
+                        /*progressBar.setVisibility(View.INVISIBLE);
+                        Intent intent = new Intent(CartCheckoutActivity.this, AfterOrderActivity.class);
+                        startActivity(intent);
+                        intent.putExtra("Title", "Order Placed!");
+                        intent.putExtra("Desc", "Thanks you for shopping with us! \n your order was placed successfully.");
+                        finish();*/
+                    } else {
+                        progressBar.setVisibility(View.INVISIBLE);
+                        Toast.makeText(getApplicationContext(), task.getException().toString(), Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
-        });
+            });
+        }
+
+
+
     }
 
     private void makeOrderCOD() {
@@ -389,9 +382,10 @@ public class OrderSummaryActivity extends AppCompatActivity {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("OrderDetails");
 
         final String paidVia = "Paid via COD.";
-        String itmname = ItemName;
+        final String OrderStatus = "Order Placed";
+        //String itmname = ItemName;
         String totalAmount = amountPayable.getText().toString();
-        String itemQuantity = Quantity;
+        //String itemQuantity = Quantity;
         String orderDate = getCurrentDate();
         String orderTime = getCurrentTime();
         String userName = user != null ? user.getDisplayName() : null;
@@ -403,59 +397,64 @@ public class OrderSummaryActivity extends AppCompatActivity {
         String userCity = City.getText().toString().trim();
         String userState = State.getText().toString().trim();
         String userZip = Zip.getText().toString().trim();
-        String orderId = databaseReference.push().getKey();
-        String itemCode = ItemCode;
+       /* String itemCode = ItemCode;
         String image = Image;
         String orderStatus = OrderStatus;
         String orderBill = "";
         String hsnCode = HsnCode;
         String gstRate = GstRate;
-        String measurement = Measurement;
+        String measurement = Measurement;*/
         String EstimatedTime = "2 Days";
 
-        OrderDetails od = new OrderDetails(
-                itmname,
-                itemCode,
-                measurement,
-                image,
-                orderStatus,
-                orderBill,
-                EstimatedTime,
-                totalAmount,
-                hsnCode,
-                gstRate,
-                itemQuantity,
-                orderTime,
-                orderDate,
-                userName,
-                userMail,
-                userPhone,
-                userAddress,
-                userLandMark,
-                userCity,
-                userState,
-                userZip,
-                userID,
-                paidVia,
-                orderId
-        );
-        databaseReference.child(orderId).setValue(od).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isComplete()) {
-                    //ToDo: show dialog here instead of toast.
-                    progressBar.setVisibility(View.INVISIBLE);
-                    Intent intent = new Intent(OrderSummaryActivity.this, AfterOrderActivity.class);
-                    intent.putExtra("Title", "Order Placed!");
-                    intent.putExtra("Desc", "Thanks you for shopping with us! \n your order was placed successfully.");
-                    startActivity(intent);
-                    finish();
-                } else {
-                    progressBar.setVisibility(View.INVISIBLE);
-                    Toast.makeText(getApplicationContext(), task.getException().toString(), Toast.LENGTH_SHORT).show();
+        for (CartDetails cd : cartList) {
+            String orderId = databaseReference.push().getKey();
+
+            OrderDetails od = new OrderDetails(
+                    cd.getItemName(),
+                    cd.getItemCode(),
+                    cd.getMeasurement(),
+                    cd.getItemImage(),
+                    OrderStatus,
+                    "",
+                    EstimatedTime,
+                    String.valueOf(totalPayableAmount),
+                    "hsnCode",//ToDo Update this
+                    "gstRate",
+                    cd.getItemQuantity(),
+                    orderTime,
+                    orderDate,
+                    userName,
+                    userMail,
+                    userPhone,
+                    userAddress,
+                    userLandMark,
+                    userCity,
+                    userState,
+                    userZip,
+                    userID,
+                    paidVia,
+                    orderId
+            );
+            databaseReference.child(orderId).setValue(od).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isComplete()) {
+                        Toast.makeText(getApplicationContext(),"Placing Orders...",Toast.LENGTH_SHORT).show();
+                        //ToDo: show dialog here instead of toast.
+                        /*progressBar.setVisibility(View.INVISIBLE);
+                        Intent intent = new Intent(CartCheckoutActivity.this, AfterOrderActivity.class);
+                        startActivity(intent);
+                        intent.putExtra("Title", "Order Placed!");
+                        intent.putExtra("Desc", "Thanks you for shopping with us! \n your order was placed successfully.");
+                        finish();*/
+                    } else {
+                        progressBar.setVisibility(View.INVISIBLE);
+                        Toast.makeText(getApplicationContext(), task.getException().toString(), Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
-        });
+            });
+        }
+
     }
 
 

@@ -18,7 +18,6 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.example.e_comretail.Details.CartDetails;
-import com.example.e_comretail.Details.ItemDetails;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -75,7 +74,7 @@ public class MainItemDsiplay extends AppCompatActivity {
         itemPrice = findViewById(R.id.product_price);
         itemPrice.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         itemFinalPrice = findViewById(R.id.product_final_price);
-        discount = findViewById(R.id.discount);
+        discount = findViewById(R.id.cart_total_show);
         description = findViewById(R.id.description);
         isCertifeid = findViewById(R.id.certified);
         measurement = findViewById(R.id.measurement);

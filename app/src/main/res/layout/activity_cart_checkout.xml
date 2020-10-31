@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ViewOrder">
+    tools:context=".CartCheckoutActivity">
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -16,19 +16,37 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" >
+        <ProgressBar
+            android:layout_marginEnd="10dp"
+            android:layout_gravity="end"
+            android:id="@+id/progress_circular"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
     </androidx.appcompat.widget.Toolbar>
+
+    <Button
+        android:id="@+id/shipping_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="Add Shipping Address"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/button_place_order"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+        app:layout_constraintTop_toBottomOf="@+id/shipping_address">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:scrollbars="vertical">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView3"
@@ -37,23 +55,15 @@
                 android:layout_margin="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
-                app:cardElevation="5dp">
+                app:cardElevation="5dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp">
-
-                    <TextView
-                        android:id="@+id/name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:text="Name"
-                        app:layout_constraintBottom_toTopOf="@+id/address"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/divider6" />
 
                     <TextView
                         android:id="@+id/textView3"
@@ -64,22 +74,19 @@
                         android:text="My Shipping Address:"
                         android:textAllCaps="true"
                         android:textStyle="bold"
-                        app:layout_constraintBottom_toTopOf="@+id/divider6"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
                         android:id="@+id/address"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
                         android:text="address"
                         android:textSize="16sp"
-                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/name" />
+                        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
                     <TextView
                         android:id="@+id/landmark"
@@ -110,9 +117,9 @@
                         android:layout_marginStart="8dp"
                         android:text="Sate"
                         android:textSize="16sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/zip"
-                        app:layout_constraintStart_toEndOf="@+id/zip"
-                        app:layout_constraintTop_toTopOf="@+id/zip" />
+                        app:layout_constraintBottom_toBottomOf="@+id/city"
+                        app:layout_constraintStart_toEndOf="@+id/city"
+                        app:layout_constraintTop_toTopOf="@+id/city" />
 
                     <TextView
                         android:id="@+id/zip"
@@ -121,18 +128,19 @@
                         android:layout_marginStart="8dp"
                         android:text="Zip"
                         android:textSize="16sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/city"
-                        app:layout_constraintStart_toEndOf="@+id/city"
-                        app:layout_constraintTop_toTopOf="@+id/city" />
+                        app:layout_constraintBottom_toBottomOf="@+id/state"
+                        app:layout_constraintStart_toEndOf="@+id/state"
+                        app:layout_constraintTop_toTopOf="@+id/state" />
 
                     <TextView
                         android:id="@+id/phone"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="16dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginBottom="8dp"
+                        android:drawableStart="@drawable/ic_baseline_phone_android_16"
                         android:drawablePadding="5dp"
                         android:text="Phone"
                         android:textSize="16sp"
@@ -146,13 +154,10 @@
                         android:layout_width="0dp"
                         android:layout_height="1dp"
                         android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
                         android:layout_marginEnd="8dp"
-                        android:layout_marginBottom="8dp"
                         android:background="?android:attr/listDivider"
-                        app:layout_constraintBottom_toTopOf="@+id/name"
+                        app:layout_constraintBottom_toTopOf="@+id/address"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView3" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -162,10 +167,10 @@
                 android:id="@+id/cardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                app:cardElevation="5dp">
+                android:layout_margin="8dp"
+                app:cardElevation="5dp"
+                app:layout_constraintTop_toBottomOf="@+id/cardView3"
+                tools:layout_editor_absoluteX="8dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -186,70 +191,80 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/item_name"
+                        android:id="@+id/total_items"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
-                        android:text="item Name"
+                        android:text="Total Items"
                         android:textColor="#000000"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/tv_billing" />
 
                     <TextView
-                        android:id="@+id/hsn_code"
+                        android:id="@+id/tv_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
-                        android:text="HSN CODE and GST"
+                        android:text="Total Amount"
                         android:textColor="#000000"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/item_name" />
+                        app:layout_constraintTop_toBottomOf="@+id/total_items" />
 
                     <TextView
-                        android:id="@+id/tv_item_highlights"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
-                        android:text="item highlights"
-                        android:textColor="#000000"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/hsn_code" />
-
-                    <TextView
-                        android:id="@+id/item_highlights"
+                        android:id="@+id/item_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
-                        android:text="Item Highlights"
-                        app:layout_constraintBottom_toBottomOf="@+id/tv_item_highlights"
+                        android:text="Item Price"
+                        app:layout_constraintBottom_toBottomOf="@+id/tv_price"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/tv_item_highlights" />
+                        app:layout_constraintTop_toTopOf="@+id/tv_price" />
 
                     <TextView
-                        android:id="@+id/tv_quantity"
+                        android:id="@+id/cart_total"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
-                        android:text="Quantity: "
-                        android:textStyle="bold"
+                        android:text="Discount"
+                        android:textColor="#000000"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_item_highlights" />
+                        app:layout_constraintTop_toBottomOf="@+id/tv_price" />
 
                     <TextView
-                        android:id="@+id/quantity"
+                        android:id="@+id/tv_delivery_charge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:text="Delivery Charges"
+                        android:textColor="#000000"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/cart_total" />
+
+                    <TextView
+                        android:id="@+id/delivery_charges_show"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
-                        android:text="quantity number"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@+id/tv_quantity"
+                        android:text="Charge"
+                        android:textColor="#4CAF50"
+                        app:layout_constraintBottom_toBottomOf="@+id/tv_delivery_charge"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/tv_quantity"
-                        app:layout_constraintVertical_bias="0.0" />
+                        app:layout_constraintTop_toTopOf="@+id/tv_delivery_charge" />
+
+                    <TextView
+                        android:id="@+id/cart_total_show"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:text="5%"
+                        android:textColor="#4CAF50"
+                        app:layout_constraintBottom_toBottomOf="@+id/cart_total"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/cart_total" />
 
                     <TextView
                         android:id="@+id/tv_payable"
@@ -260,9 +275,9 @@
                         android:layout_marginBottom="8dp"
                         android:text="Amount Payable"
                         android:textColor="#000000"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintBottom_toTopOf="@+id/divider10"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_quantity" />
+                        app:layout_constraintTop_toBottomOf="@+id/tv_delivery_charge" />
 
                     <TextView
                         android:id="@+id/amount_payable_show"
@@ -276,6 +291,21 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/tv_payable" />
 
+                    <TextView
+                        android:id="@+id/textView5"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="@string/ImportantNote"
+                        android:textColor="@color/colorPrimary"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/divider10" />
+
                     <View
                         android:id="@+id/divider7"
                         android:layout_width="0dp"
@@ -287,45 +317,113 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/tv_billing" />
+
+                    <View
+                        android:id="@+id/divider10"
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="?android:attr/listDivider"
+                        app:layout_constraintBottom_toTopOf="@+id/textView5"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_payable" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
-        </LinearLayout>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                app:cardElevation="5dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cardView">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:text="Select Mode of Payment:"
+                        android:textAllCaps="true"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <RadioButton
+                        android:id="@+id/radio_upi_payment"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:text="UPI Payment"
+                        app:layout_constraintEnd_toStartOf="@+id/payment_gif"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+                    <ImageView
+                        android:id="@+id/payment_gif"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginEnd="8dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/radio_upi_payment"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/radio_upi_payment" />
+
+                    <RadioButton
+                        android:id="@+id/radio_cash_on_delivery"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="Cash On Delivery"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/radio_upi_payment" />
+
+                    <View
+                        android:id="@+id/divider8"
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="?android:attr/listDivider"
+                        app:layout_constraintBottom_toTopOf="@+id/radio_cash_on_delivery"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/radio_upi_payment" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
-    <Button
-        android:id="@+id/cancel_order"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="Cancel order"
-        android:backgroundTint="#E30F0F"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/track_order"
-        app:layout_constraintStart_toStartOf="parent" />
+
 
     <Button
-        android:id="@+id/track_order"
-        android:layout_width="0dp"
+        android:id="@+id/button_place_order"
+        android:text="Confirm Order"
+        android:layout_margin="5dp"
+        android:backgroundTint="#F44336"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="Track Order"
-        android:backgroundTint="#4CAF50"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/cancel_order" />
-
-    <Button
-        android:id="@+id/reorder"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="Reorder"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
