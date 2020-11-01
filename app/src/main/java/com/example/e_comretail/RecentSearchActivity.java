@@ -10,8 +10,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.e_comretail.Adapter.ItemDisplayAdapter;
-import com.example.e_comretail.Details.AllCategoryDetails;
 import com.example.e_comretail.Details.ItemDetails;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,26 +21,23 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class GenderActivity extends AppCompatActivity {
-    private RecyclerView recyclerView;
-    private DatabaseReference ref;
+public class RecentSearchActivity extends AppCompatActivity {
     private ArrayList<ItemDetails> list;
-    String Gender;
+    private DatabaseReference ref;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gender);
-
-        Intent intent = getIntent();
-        Gender = intent.getStringExtra("Gender");
-
+        setContentView(R.layout.activity_recent_search);
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(Gender);
+        toolbar.setTitle("Search History");
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        recyclerView = findViewById(R.id.recycler_gender);
-        ref = FirebaseDatabase.getInstance().getReference().child("All Items/");
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        ref = FirebaseDatabase.getInstance().getReference().child("Recent Search/"
+                + Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
+        recyclerView = findViewById(R.id.recycler_recent);
         initList();
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
@@ -69,7 +66,7 @@ public class GenderActivity extends AppCompatActivity {
                 String Stock = list.get(position).getStock();
                 String ItemCode = list.get(position).getItemcode();
 
-                Intent intent = new Intent(GenderActivity.this, MainItemDsiplay.class);
+                Intent intent = new Intent(RecentSearchActivity.this, MainItemDsiplay.class);
                 intent.putExtra("ItemName", ItemName);
                 intent.putExtra("ItemPrice", ItemPrice);
                 intent.putExtra("Gst", Gst);
@@ -99,12 +96,13 @@ public class GenderActivity extends AppCompatActivity {
                     if (dataSnapshot.exists()) {
                         list = new ArrayList<>();
                         for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                            if (ds.getValue(ItemDetails.class).getGender().equals(Gender))
                             list.add(ds.getValue(ItemDetails.class));
                         }
-                        ItemDisplayAdapter itemDisplayAdapter = new ItemDisplayAdapter(list, GenderActivity.this);
+                        ItemDisplayAdapter itemDisplayAdapter = new ItemDisplayAdapter(list, RecentSearchActivity.this);
                         recyclerView.setAdapter(itemDisplayAdapter);
+                        itemDisplayAdapter.notifyDataSetChanged();
                     }
+
                 }
 
                 @Override
@@ -114,6 +112,7 @@ public class GenderActivity extends AppCompatActivity {
             });
         }
     }
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();

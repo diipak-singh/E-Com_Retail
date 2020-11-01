@@ -1,12 +1,14 @@
 package com.example.e_comretail.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,8 +16,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.e_comretail.Details.AddressDetails;
 import com.example.e_comretail.R;
 import com.example.e_comretail.ViewAddress;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ViewHolder> {
     private ArrayList<AddressDetails> list;
@@ -50,6 +56,7 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView Address, Landmark, City, State, Zip, Phone;
+        private ImageButton delete;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             Address = itemView.findViewById(R.id.address);
@@ -58,6 +65,7 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ViewHold
             State = itemView.findViewById(R.id.state);
             Zip = itemView.findViewById(R.id.zip);
             Phone = itemView.findViewById(R.id.phone);
+
         }
     }
 }

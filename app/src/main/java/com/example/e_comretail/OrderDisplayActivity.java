@@ -48,6 +48,7 @@ public class OrderDisplayActivity extends AppCompatActivity {
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(OrderDisplayActivity.this, ViewOrder.class);
                 intent.putExtra("OrderID", list.get(position).getOrderID());
+                intent.putExtra("ItemCode", list.get(position).getItemCode());
                 intent.putExtra("UserAddress", list.get(position).getUserAddress());
                 intent.putExtra("UserState", list.get(position).getUserState());
                 intent.putExtra("UserLandmark", list.get(position).getUserLandMark());

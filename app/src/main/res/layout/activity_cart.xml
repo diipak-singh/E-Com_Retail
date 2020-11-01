@@ -105,7 +105,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:text="Discount"
+                android:text="Cart total"
                 android:textColor="#000000"
                 app:layout_constraintBottom_toBottomOf="@+id/cart_total"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -128,7 +128,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:text="delivery Charge"
-                android:textColor="#000000"
+                android:textColor="#4CAF50"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_delivery_charge"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/tv_delivery_charge" />

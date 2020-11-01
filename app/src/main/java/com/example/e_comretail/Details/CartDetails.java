@@ -3,13 +3,17 @@ package com.example.e_comretail.Details;
 import java.io.Serializable;
 
 public class CartDetails implements Serializable {
-    private String itemCode, stock, itemName, itemPrice, measurement, itemQuantity, discount, AmountPayable, itemImage, itemId;
+    private String itemCode, stock, itemName, HsnCode, GstRate, itemPrice, measurement, itemQuantity, discount, AmountPayable, itemImage, itemId;
 
+    public CartDetails() {
+    }
 
-    public CartDetails(String itemCode, String stock, String itemName, String itemPrice, String measurement, String itemQuantity, String discount, String amountPayable, String itemImage, String itemId) {
+    public CartDetails(String itemCode, String stock, String itemName, String hsnCode, String gstRate, String itemPrice, String measurement, String itemQuantity, String discount, String amountPayable, String itemImage, String itemId) {
         this.itemCode = itemCode;
         this.stock = stock;
         this.itemName = itemName;
+        HsnCode = hsnCode;
+        GstRate = gstRate;
         this.itemPrice = itemPrice;
         this.measurement = measurement;
         this.itemQuantity = itemQuantity;
@@ -17,9 +21,6 @@ public class CartDetails implements Serializable {
         AmountPayable = amountPayable;
         this.itemImage = itemImage;
         this.itemId = itemId;
-    }
-
-    public CartDetails() {
     }
 
     public String getItemCode() {
@@ -44,6 +45,22 @@ public class CartDetails implements Serializable {
 
     public void setItemName(String itemName) {
         this.itemName = itemName;
+    }
+
+    public String getHsnCode() {
+        return HsnCode;
+    }
+
+    public void setHsnCode(String hsnCode) {
+        HsnCode = hsnCode;
+    }
+
+    public String getGstRate() {
+        return GstRate;
+    }
+
+    public void setGstRate(String gstRate) {
+        GstRate = gstRate;
     }
 
     public String getItemPrice() {

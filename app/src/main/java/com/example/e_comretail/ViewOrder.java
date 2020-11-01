@@ -4,21 +4,29 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 
+import com.example.e_comretail.Details.UserDetails;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Objects;
 
 public class ViewOrder extends AppCompatActivity {
-    private Button TrackOrder, CancelOrder, ReOrder;
+    private Button TrackOrder, CancelOrder, ReOrder, Exchange, Review;
+    private CardView downloadIncoice;
     private DatabaseReference ref;
+    private FirebaseUser user;
     private TextView userName, userAddress, userLandmark, userCity, userZip, userState, userPhone, itemName, hsnCode, quantity, totalAmount, itemHighlights;
     String orderId;
+    String ItemCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +41,7 @@ public class ViewOrder extends AppCompatActivity {
         ref = FirebaseDatabase.getInstance().getReference().child("OrderDetails/");
         Intent intent = getIntent();
         orderId = intent.getStringExtra("OrderID");
+        ItemCode = intent.getStringExtra("ItemCode");
         String UserAddress = intent.getStringExtra("UserAddress");
         String UserState = intent.getStringExtra("UserState");
         String UserLandmark = intent.getStringExtra("UserLandmark");
@@ -65,6 +74,12 @@ public class ViewOrder extends AppCompatActivity {
         quantity = findViewById(R.id.quantity);
         totalAmount = findViewById(R.id.amount_payable_show);
         itemHighlights = findViewById(R.id.item_highlights);
+        Exchange = findViewById(R.id.exchange);
+        Exchange.setVisibility(View.GONE);
+        Review = findViewById(R.id.review);
+        Review.setVisibility(View.GONE);
+        downloadIncoice = findViewById(R.id.download_invoice);
+        downloadIncoice.setVisibility(View.GONE);
 
         userName.setText(UserName);
         userAddress.setText(UserAddress);
@@ -85,6 +100,12 @@ public class ViewOrder extends AppCompatActivity {
         }
         if (OrderStatus.equals("Shipped")){
             CancelOrder.setVisibility(View.GONE);
+        }
+        if (OrderStatus.equals("Delivered")){
+            CancelOrder.setVisibility(View.GONE);
+            Review.setVisibility(View.VISIBLE);
+            downloadIncoice.setVisibility(View.VISIBLE);
+            Exchange.setVisibility(View.VISIBLE);
         }
         CancelOrder.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,6 +141,29 @@ public class ViewOrder extends AppCompatActivity {
                 startActivity(intent2);
             }
         });
+        Review.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ViewOrder.this, RatingActivity.class);
+                intent.putExtra("ItemCode", ItemCode);
+                startActivity(intent);
+            }
+        });
+        Exchange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UploadUserDetails();
+                Intent intent = new Intent(ViewOrder.this, ChatActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+    public void UploadUserDetails() {
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("User Details");
+        String photo = String.valueOf(user.getPhotoUrl());
+        UserDetails userDetails = new UserDetails(photo, user.getEmail(), user.getDisplayName(), user.getUid());
+        reference.child(user.getUid()).setValue(userDetails);
     }
     @Override
     public boolean onSupportNavigateUp() {

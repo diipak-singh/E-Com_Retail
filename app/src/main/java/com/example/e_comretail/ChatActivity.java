@@ -94,14 +94,16 @@ public class ChatActivity extends AppCompatActivity {
 
                 if (model.getAdminMessage().equals("")) {
                     viewHolder.rightText.setText(model.getUserMessage());
+                    viewHolder.rightDate.setText(model.getMessageDate() + " • " + model.getMessageTime());
 
-                    viewHolder.rightText.setVisibility(View.VISIBLE);
-                    viewHolder.leftText.setVisibility(View.GONE);
+                    viewHolder.rightLayout.setVisibility(View.VISIBLE);
+                    viewHolder.leftLayout.setVisibility(View.GONE);
                 } else {
                     viewHolder.leftText.setText(model.getAdminMessage());
+                    viewHolder.leftDate.setText(model.getMessageDate() + " • " + model.getMessageTime());
 
-                    viewHolder.rightText.setVisibility(View.GONE);
-                    viewHolder.leftText.setVisibility(View.VISIBLE);
+                    viewHolder.rightLayout.setVisibility(View.GONE);
+                    viewHolder.leftLayout.setVisibility(View.VISIBLE);
                 }
             }
         };
@@ -134,7 +136,6 @@ public class ChatActivity extends AppCompatActivity {
         String strDate = mdformat.format(calendar.getTime());
         //display(strDate);
         return strDate;
-
     }
 
     public String getCurrentTime() {

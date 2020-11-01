@@ -14,7 +14,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
+import com.example.e_comretail.CartActivity;
 import com.example.e_comretail.Details.ItemDetails;
+import com.example.e_comretail.MainItemDsiplay;
 import com.example.e_comretail.OrderSummaryActivity;
 import com.example.e_comretail.R;
 import com.synnapps.carouselview.CarouselView;
@@ -24,14 +26,13 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class OfferItemsDisplay extends AppCompatActivity {
-    private ArrayList<ItemDetails> list;
 
     private TextView itemName, itemPrice, itemFinalPrice, offer, description, measurement, Stock, QuantityText;
     private CarouselView carouselView;
     private ImageView isCertifeid;
     private Button buyNow;
     private EditText quantity;
-    private ImageButton add, substract;
+    private ImageButton add, substract, GoBack, GotoCart;
     int q = 1;
 
 
@@ -39,12 +40,6 @@ public class OfferItemsDisplay extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_offer_items_display);
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("");
-        setSupportActionBar(toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         Intent intent = getIntent();
         final String ItemName = intent.getStringExtra("ItemName");
@@ -63,6 +58,8 @@ public class OfferItemsDisplay extends AppCompatActivity {
         assert stock != null;
         int stock1 = Integer.parseInt(stock);
 
+        GoBack = findViewById(R.id.go_back);
+        GotoCart = findViewById(R.id.go_to_cart);
         add = findViewById(R.id.add);
         substract = findViewById(R.id.substract);
         add.setVisibility(View.INVISIBLE);
@@ -129,9 +126,22 @@ public class OfferItemsDisplay extends AppCompatActivity {
                     quantity.setText(String.valueOf(--q));
             }
         });
+        GoBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        GotoCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(OfferItemsDisplay.this, CartActivity.class);
+                startActivity(intent);
+            }
+        });
 
         itemName.setText(ItemName);
-        offer.setText(Offer + "%");
+        offer.setText(Offer + "%" +" OFF");
         measurement.setText(Measurement);
         description.setText(Desc);
 
@@ -184,9 +194,4 @@ public class OfferItemsDisplay extends AppCompatActivity {
         return str;
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
 }

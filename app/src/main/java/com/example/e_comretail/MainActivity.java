@@ -1,11 +1,10 @@
 package com.example.e_comretail;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,7 +50,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        ImageButton cart = toolbar.findViewById(R.id.cart);
         drawer = findViewById(R.id.drawer_layout);
+        cart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, CartActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
         navigationView.setNavigationItemSelectedListener(this);
@@ -92,7 +99,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(intent4);
                 break;
             case R.id.nav_wishlist:
-                Toast.makeText(this, "Wishlist", Toast.LENGTH_SHORT).show();
+                Intent intent6 = new Intent(MainActivity.this, WishlistActivity.class);
+                startActivity(intent6);
                 break;
             case R.id.nav_account:
                 Intent intent1 = new Intent(MainActivity.this, MyAccount.class);
@@ -149,7 +157,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         String photo = String.valueOf(user.getPhotoUrl());
         UserDetails userDetails = new UserDetails(photo, user.getEmail(), user.getDisplayName(), user.getUid());
         reference.child(user.getUid()).setValue(userDetails);
-
     }
 
     @Override

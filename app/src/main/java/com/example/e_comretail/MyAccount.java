@@ -68,7 +68,6 @@ public class MyAccount extends AppCompatActivity {
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(
                         (MyAccount.this));
-                builder.setTitle("Logout!");
                 builder.setMessage("Are you sure, you want to logout from the current session?");
                 builder.setNegativeButton("CANCEL",
                         new DialogInterface.OnClickListener() {
