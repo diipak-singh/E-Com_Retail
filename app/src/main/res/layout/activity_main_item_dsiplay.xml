@@ -22,6 +22,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <com.synnapps.carouselview.CarouselView
                     android:id="@+id/carouselView"
                     android:layout_width="match_parent"
@@ -36,14 +37,15 @@
                     app:slideInterval="3000"
                     app:strokeColor="#FF777777"
                     app:strokeWidth="1dp" />
+
                 <ImageButton
                     android:id="@+id/go_back"
-                    android:elevation="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:background="@drawable/tool_background"
+                    android:elevation="10dp"
                     android:padding="11dp"
                     android:src="@drawable/ic_baseline_arrow_back_24"
                     app:layout_constraintStart_toStartOf="parent"
@@ -51,12 +53,12 @@
 
                 <ImageButton
                     android:id="@+id/go_to_cart"
-                    android:elevation="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:background="@drawable/tool_background"
+                    android:elevation="10dp"
                     android:padding="11dp"
                     android:src="@drawable/ic_baseline_shopping_cart_24"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -249,6 +251,19 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <TextView
+                    android:id="@+id/stock_left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:fontFamily="@font/adamina"
+                    android:text="Only # left"
+                    android:textColor="#FF5722"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/add"
+                    app:layout_constraintStart_toEndOf="@+id/add"
+                    app:layout_constraintTop_toTopOf="@+id/add" />
                 <Button
                     android:id="@+id/buy"
                     android:layout_width="0dp"
@@ -280,9 +295,9 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:background="#EDEDED"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="#EDEDED">
 
                 <TextView
                     android:id="@+id/item_desc_title"
@@ -321,13 +336,26 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
                     android:fontFamily="@font/adamina"
                     android:text="CUSTOMER REVIEWS"
                     android:textColor="#000000"
                     android:textSize="18sp"
+                    app:layout_constraintBottom_toTopOf="@+id/recycler_review"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_view_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:text="@string/view_all"
+                    android:padding="5dp"
+                    android:textColor="#3F51B5"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView12"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/textView12" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_review"
@@ -336,7 +364,19 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView12" />
+
+                <View
+                    android:id="@+id/divider4"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="?android:attr/listDivider"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView12" />

@@ -68,7 +68,7 @@ public class RatingActivity extends AppCompatActivity {
     }
 
     public void UploadRating() {
-        String strRating = String.valueOf((int)ratingBar.getRating());
+        String strRating = String.valueOf(ratingBar.getRating());
         String strReview = review.getText().toString().trim();
         String userId = user.getUid();
         String itemCode = ItemCode;

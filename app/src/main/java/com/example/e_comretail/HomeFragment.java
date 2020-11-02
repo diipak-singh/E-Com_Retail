@@ -20,6 +20,7 @@ import com.example.e_comretail.Adapter.HorizontalCategoryAdapter;
 import com.example.e_comretail.Details.AllCategoryDetails;
 import com.example.e_comretail.Details.ItemDetails;
 import com.example.e_comretail.Offer.OfferActivity;
+import com.example.e_comretail.Offer.OfferRupeeActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -45,7 +46,7 @@ public class HomeFragment extends Fragment {
     final long DELAY_MS = 500;//delay in milliseconds before task is to be executed
     final long PERIOD_MS = 3000; // time in milliseconds between successive task executions.
 
-    private CardView Male, Female, Kids;
+    private CardView Male, Female, Kids, Under299, Under399, Under699, Percent50, Percent60, Percent70;
     private Button ViewAll1, ViewAll2, ViewAll3;
 
     public HomeFragment() {
@@ -74,6 +75,12 @@ public class HomeFragment extends Fragment {
         Male = view.findViewById(R.id.male);
         Female = view.findViewById(R.id.female);
         Kids = view.findViewById(R.id.kids);
+        Under299 = view.findViewById(R.id.cardView5);
+        Under399 = view.findViewById(R.id.cardView6);
+        Under699 = view.findViewById(R.id.cardView7);
+        Percent50 = view.findViewById(R.id.cardView8);
+        Percent60 = view.findViewById(R.id.cardView9);
+        Percent70 = view.findViewById(R.id.cardView10);
         ViewAll1 = view.findViewById(R.id.view_all1);
         ViewAll2 = view.findViewById(R.id.button);
         ViewAll3 = view.findViewById(R.id.view_all3);
@@ -238,7 +245,57 @@ public class HomeFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
+        Under299.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), OfferRupeeActivity.class);
+                intent.putExtra("OfferRupees", "299");
+                startActivity(intent);
+            }
+        });
+        Under399.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), OfferRupeeActivity.class);
+                intent.putExtra("OfferRupees", "399");
+                startActivity(intent);
+            }
+        });
+        Under699.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), OfferRupeeActivity.class);
+                intent.putExtra("OfferRupees", "699");
+                startActivity(intent);
+            }
+        });
+        Percent50.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), OfferPercentActivity.class);
+                intent.putExtra("LowerRange", "40");
+                intent.putExtra("UpperRange", "50");
+                startActivity(intent);
+            }
+        });
+        Percent60.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), OfferPercentActivity.class);
+                intent.putExtra("LowerRange", "50");
+                intent.putExtra("UpperRange", "60");
+                startActivity(intent);
+            }
+        });
+        Percent70.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), OfferPercentActivity.class);
+                intent.putExtra("LowerRange", "60");
+                intent.putExtra("UpperRange", "70");
+                startActivity(intent);
+            }
+        });
         return view;
     }
 

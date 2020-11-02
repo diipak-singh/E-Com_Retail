@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_contact:
                 UploadUserDetails();
                 Intent intent5 = new Intent(MainActivity.this, ChatActivity.class);
+                intent5.putExtra("message", "");
                 startActivity(intent5);
                 break;
         }

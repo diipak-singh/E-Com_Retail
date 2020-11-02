@@ -236,6 +236,20 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <TextView
+                    android:id="@+id/stock_left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:fontFamily="@font/adamina"
+                    android:text="Only # left"
+                    android:textColor="#FF5722"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/add"
+                    app:layout_constraintStart_toEndOf="@+id/add"
+                    app:layout_constraintTop_toTopOf="@+id/add" />
+
                 <Button
                     android:id="@+id/buy"
                     android:layout_width="0dp"

@@ -12,7 +12,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".WishlistActivity"></activity>
+        <activity android:name=".ViewRating"></activity>
+        <activity android:name=".OfferPercentActivity" />
+        <activity android:name=".Offer.OfferRupeeActivity" />
+        <activity android:name=".WishlistActivity" />
         <activity android:name=".ImageViewActivity" />
         <activity android:name=".RecentSearchActivity" />
         <activity android:name=".RatingActivity" />

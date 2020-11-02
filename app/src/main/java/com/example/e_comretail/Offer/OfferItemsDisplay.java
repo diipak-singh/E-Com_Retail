@@ -11,19 +11,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.example.e_comretail.CartActivity;
-import com.example.e_comretail.Details.ItemDetails;
-import com.example.e_comretail.MainItemDsiplay;
 import com.example.e_comretail.OrderSummaryActivity;
 import com.example.e_comretail.R;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ImageListener;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class OfferItemsDisplay extends AppCompatActivity {
 
@@ -33,6 +29,7 @@ public class OfferItemsDisplay extends AppCompatActivity {
     private Button buyNow;
     private EditText quantity;
     private ImageButton add, substract, GoBack, GotoCart;
+    private TextView stockLeft;
     int q = 1;
 
 
@@ -50,7 +47,7 @@ public class OfferItemsDisplay extends AppCompatActivity {
         String IsCertified = intent.getStringExtra("IsCertified");
         final String Measurement = intent.getStringExtra("Measurement");
         final String Discount = intent.getStringExtra("Discount");
-        String stock = intent.getStringExtra("Stock");
+        final String stock = intent.getStringExtra("Stock");
         final String ItemCode = intent.getStringExtra("ItemCode");
         final String HsnCode = intent.getStringExtra("HsnCode");
         final ArrayList<String> imageList = intent.getStringArrayListExtra("images");
@@ -58,6 +55,8 @@ public class OfferItemsDisplay extends AppCompatActivity {
         assert stock != null;
         int stock1 = Integer.parseInt(stock);
 
+        stockLeft = findViewById(R.id.stock_left);
+        stockLeft.setVisibility(View.GONE);
         GoBack = findViewById(R.id.go_back);
         GotoCart = findViewById(R.id.go_to_cart);
         add = findViewById(R.id.add);
@@ -116,14 +115,22 @@ public class OfferItemsDisplay extends AppCompatActivity {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                quantity.setText(String.valueOf(++q));
+                if (q < Integer.parseInt(stock)) {
+                    quantity.setText(String.valueOf(++q));
+                }else{
+                    stockLeft.setText("Only " + stock + " items left!");
+                    stockLeft.setVisibility(View.VISIBLE);
+                }
+
             }
         });
         substract.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (q > 1)
+                if (q > 1){
                     quantity.setText(String.valueOf(--q));
+                }
+                stockLeft.setVisibility(View.GONE);
             }
         });
         GoBack.setOnClickListener(new View.OnClickListener() {
@@ -141,7 +148,7 @@ public class OfferItemsDisplay extends AppCompatActivity {
         });
 
         itemName.setText(ItemName);
-        offer.setText(Offer + "%" +" OFF");
+        offer.setText(Offer + "%" + " OFF");
         measurement.setText(Measurement);
         description.setText(Desc);
 
@@ -166,7 +173,7 @@ public class OfferItemsDisplay extends AppCompatActivity {
                 int DiscountInRupee = (OfferInRupee + (ItemPriceAftrGst * Integer.parseInt(Discount) / 100)) * itemQuantity;
                 int AmountPayable = itemPriceAfterOffer * itemQuantity;
                 int deliveryCharge = 0;
-                if (AmountPayable < 500){
+                if (AmountPayable < 500) {
                     deliveryCharge = 30;
                     AmountPayable = AmountPayable + deliveryCharge;
                 }

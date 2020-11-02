@@ -38,17 +38,18 @@ import java.util.Objects;
 
 public class MainItemDsiplay extends AppCompatActivity {
 
-    private TextView itemName, itemPrice, itemFinalPrice, discount, description, measurement, Stock, QuantityText;
+    private TextView itemName, itemPrice, itemFinalPrice, discount, description, measurement, Stock, QuantityText, ViewAll;
     private CarouselView carouselView;
     private ImageView isCertifeid;
     private Button buyNow, AddToCart;
     private EditText quantity;
     private ImageButton add, substract, GoBack, GotoCart, AddToWishList;
     int q = 1;
-    int totalRating = 0;
-    int avgRating = 0;
+    float totalRating = 0.0f;
+    float avgRating = 0.0f;
     private RatingBar ratingBar;
     private TextView tv_totalRating;
+    private TextView stockLeft;
 
     String ItemCode;
     private RecyclerView recyclerView;
@@ -78,6 +79,9 @@ public class MainItemDsiplay extends AppCompatActivity {
 
         ref = FirebaseDatabase.getInstance().getReference().child("Review Details");
 
+        stockLeft = findViewById(R.id.stock_left);
+        stockLeft.setVisibility(View.GONE);
+        ViewAll = findViewById(R.id.tv_view_all);
         AddToWishList = findViewById(R.id.add_to_wishlist);
         tv_totalRating = findViewById(R.id.total_rating);
         ratingBar = findViewById(R.id.avg_rating);
@@ -141,14 +145,21 @@ public class MainItemDsiplay extends AppCompatActivity {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                quantity.setText(String.valueOf(++q));
+                if (q < Integer.parseInt(stock)) {
+                    quantity.setText(String.valueOf(++q));
+                }else{
+                    stockLeft.setText("Only " + stock + " items left!");
+                    stockLeft.setVisibility(View.VISIBLE);
+                }
             }
         });
         substract.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (q > 1)
+                if (q > 1){
                     quantity.setText(String.valueOf(--q));
+                }
+                stockLeft.setVisibility(View.GONE);
             }
         });
 
@@ -281,12 +292,20 @@ public class MainItemDsiplay extends AppCompatActivity {
                 });
             }
         });
+        ViewAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainItemDsiplay.this, ViewRating.class);
+                intent.putExtra("ItemCode", ItemCode);
+                startActivity(intent);
+            }
+        });
         initRating();
     }
 
     public void initRating() {
         if (ref != null) {
-            ref.addValueEventListener(new ValueEventListener() {
+            ref.limitToFirst(10).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
@@ -295,14 +314,14 @@ public class MainItemDsiplay extends AppCompatActivity {
                             if (ItemCode.equals(ds.getValue(RatingDetails.class).getProductCode())) {
                                 list.add(ds.getValue(RatingDetails.class));
                                 try {
-                                    totalRating = totalRating + Integer.parseInt(ds.getValue(RatingDetails.class).getRating());
+                                    totalRating = totalRating + Float.parseFloat(ds.getValue(RatingDetails.class).getRating());
                                 } catch (NumberFormatException e) {
                                     e.fillInStackTrace();
                                 }
                             }
                         }
                         try {
-                            avgRating = (totalRating / list.size());
+                            avgRating = (totalRating / (float) list.size());
                         } catch (ArithmeticException e) {
                             e.fillInStackTrace();
                         }

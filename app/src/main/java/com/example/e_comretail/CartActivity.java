@@ -54,6 +54,7 @@ public class CartActivity extends AppCompatActivity implements Serializable {
         amountPayable = findViewById(R.id.amount_payable_show);
         cardView = findViewById(R.id.cardView4);
         placeOrder = findViewById(R.id.place_order);
+        placeOrder.setVisibility(View.GONE);
         placeOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,7 +67,7 @@ public class CartActivity extends AppCompatActivity implements Serializable {
     }
 
     public void initCart() {
-        if (ref != null) {//ToDo: reference won't be null ever becoz u defined it above in OnCreate :)
+        if (ref != null) {
             ref.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -89,11 +90,14 @@ public class CartActivity extends AppCompatActivity implements Serializable {
                         } else {
                             deliveryCharges.setText("FREE");
                         }
+                        placeOrder.setVisibility(View.VISIBLE);
                         amountPayable.setText(INR + String.valueOf((cartTotal + deliveryCharge)));
 
                         CartAdapter cartAdapter = new CartAdapter(list, CartActivity.this);
                         recyclerView.setAdapter(cartAdapter);
                         cartAdapter.notifyDataSetChanged();
+                    } else {
+                        placeOrder.setVisibility(View.GONE);
                     }
                 }
 

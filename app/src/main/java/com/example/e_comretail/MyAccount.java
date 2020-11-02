@@ -29,7 +29,7 @@ import java.util.Objects;
 public class MyAccount extends AppCompatActivity {
     private FirebaseUser user;
     private ImageView UserPic;
-    private TextView UserName, Address, MyOrder, MyCart;
+    private TextView UserName, Address, MyOrder, MyCart, MyWishList;
     private ImageButton logout;
     FirebaseAuth firebaseAuth;
     GoogleSignInClient googleSignInClient;
@@ -44,13 +44,13 @@ public class MyAccount extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        //widget initialization
         UserPic = findViewById(R.id.user_pic);
         UserName = findViewById(R.id.user_name);
         logout = findViewById(R.id.logout);
         Address = findViewById(R.id.tv_my_addresses);
         MyOrder = findViewById(R.id.tv_orders);
         MyCart = findViewById(R.id.tv_cart);
+        MyWishList = findViewById(R.id.tv_wishlist);
 
         firebaseAuth = FirebaseAuth.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -103,6 +103,13 @@ public class MyAccount extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MyAccount.this, CartActivity.class);
+                startActivity(intent);
+            }
+        });
+        MyWishList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MyAccount.this, WishlistActivity.class);
                 startActivity(intent);
             }
         });

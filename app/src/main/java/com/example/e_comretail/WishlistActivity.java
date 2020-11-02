@@ -1,10 +1,13 @@
 package com.example.e_comretail;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
@@ -84,10 +87,33 @@ public class WishlistActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onLongItemClick(View view, int position) {
+            public void onLongItemClick(View view, final int position) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(WishlistActivity.this);
+                String[] options = {"Delete"};
+                builder.setItems(options, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0:
+                                deleteWishListItem(position);
+                                break;
+//                            default:
+//
+//                                break;
 
+                        }
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         }));
+    }
+    public void deleteWishListItem(int position){
+        ref.child(list.get(position).getItemId()).removeValue();
+        Toast.makeText(WishlistActivity.this,
+                "Item Deleted Successfully",
+                Toast.LENGTH_SHORT).show();
     }
 
     public void initList() {

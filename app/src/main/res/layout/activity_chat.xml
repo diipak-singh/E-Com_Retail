@@ -32,15 +32,14 @@
         android:layout_height="match_parent"
         android:layout_above="@id/send_chat_layout"
         android:layout_below="@+id/toolbar"
-        android:background="#BEBFBF"
+        android:background="@drawable/chat_background"
         android:clipToPadding="false"
         android:paddingTop="10dp" />
-
 
     <RelativeLayout
         android:id="@+id/send_chat_layout"
         android:layout_width="match_parent"
-        android:background="#BEBFBF"
+        android:background="#3203A9F4"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true">
 

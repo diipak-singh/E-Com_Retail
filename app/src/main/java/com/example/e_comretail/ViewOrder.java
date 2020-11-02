@@ -1,12 +1,13 @@
 package com.example.e_comretail;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
@@ -14,8 +15,11 @@ import androidx.cardview.widget.CardView;
 import com.example.e_comretail.Details.UserDetails;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Objects;
 
@@ -27,6 +31,8 @@ public class ViewOrder extends AppCompatActivity {
     private TextView userName, userAddress, userLandmark, userCity, userZip, userState, userPhone, itemName, hsnCode, quantity, totalAmount, itemHighlights;
     String orderId;
     String ItemCode;
+
+    String PdfURL = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +56,7 @@ public class ViewOrder extends AppCompatActivity {
         String UserCity = intent.getStringExtra("UserCity");
         String UserZip = intent.getStringExtra("UserZip");
         String UserPhone = intent.getStringExtra("UserPhone");
-        String ItemName = intent.getStringExtra("ItemName");
+        final String ItemName = intent.getStringExtra("ItemName");
         String HsnCode = intent.getStringExtra("HsnCode");
         String GstRate = intent.getStringExtra("GstRate");
         String Quantity = intent.getStringExtra("Quantity");
@@ -93,15 +99,15 @@ public class ViewOrder extends AppCompatActivity {
         quantity.setText(Quantity);
         totalAmount.setText(AmountPayable);
         itemHighlights.setText(Measurement);
-        if (OrderStatus.equals("Cancelled")){
+        if (OrderStatus.equals("Cancelled")) {
             CancelOrder.setVisibility(View.GONE);
             TrackOrder.setVisibility(View.GONE);
             ReOrder.setVisibility(View.VISIBLE);
         }
-        if (OrderStatus.equals("Shipped")){
+        if (OrderStatus.equals("Shipped")) {
             CancelOrder.setVisibility(View.GONE);
         }
-        if (OrderStatus.equals("Delivered")){
+        if (OrderStatus.equals("Delivered")) {
             CancelOrder.setVisibility(View.GONE);
             Review.setVisibility(View.VISIBLE);
             downloadIncoice.setVisibility(View.VISIBLE);
@@ -154,10 +160,37 @@ public class ViewOrder extends AppCompatActivity {
             public void onClick(View v) {
                 UploadUserDetails();
                 Intent intent = new Intent(ViewOrder.this, ChatActivity.class);
+                intent.putExtra("message", "I have an issue with the product: "
+                        + ItemName + " which has the item code: "
+                        + ItemCode + ", I want to return/exchange the product, as I am not satisfied with its quality.");
                 startActivity(intent);
             }
         });
+        downloadIncoice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getPdf();
+            }
+        });
     }
+
+    public void getPdf() {
+        ref.child(orderId).child("orderBill").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                Toast.makeText(ViewOrder.this, snapshot.getValue().toString(), Toast.LENGTH_SHORT).show();
+                PdfURL = snapshot.getValue().toString();
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(PdfURL));
+                startActivity(browserIntent);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     public void UploadUserDetails() {
         user = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("User Details");
@@ -165,6 +198,7 @@ public class ViewOrder extends AppCompatActivity {
         UserDetails userDetails = new UserDetails(photo, user.getEmail(), user.getDisplayName(), user.getUid());
         reference.child(user.getUid()).setValue(userDetails);
     }
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
