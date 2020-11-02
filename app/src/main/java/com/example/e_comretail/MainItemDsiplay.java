@@ -9,20 +9,27 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.e_comretail.Adapter.RatingAdapter;
 import com.example.e_comretail.Details.CartDetails;
+import com.example.e_comretail.Details.RatingDetails;
+import com.example.e_comretail.Details.WishlistDetails;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ImageListener;
 
@@ -31,41 +38,56 @@ import java.util.Objects;
 
 public class MainItemDsiplay extends AppCompatActivity {
 
-    private TextView itemName, itemPrice, itemFinalPrice, discount, description, measurement, Stock, QuantityText;
+    private TextView itemName, itemPrice, itemFinalPrice, discount, description, measurement, Stock, QuantityText, ViewAll;
     private CarouselView carouselView;
     private ImageView isCertifeid;
     private Button buyNow, AddToCart;
     private EditText quantity;
-    private ImageButton add, substract;
+    private ImageButton add, substract, GoBack, GotoCart, AddToWishList;
     int q = 1;
+    float totalRating = 0.0f;
+    float avgRating = 0.0f;
+    private RatingBar ratingBar;
+    private TextView tv_totalRating;
+    private TextView stockLeft;
+
+    String ItemCode;
+    private RecyclerView recyclerView;
+    private DatabaseReference ref;
+    private ArrayList<RatingDetails> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_item_dsiplay);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("");
-        setSupportActionBar(toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
         Intent intent = getIntent();
         final String ItemName = intent.getStringExtra("ItemName");
-        String ItemPrice = intent.getStringExtra("ItemPrice");
+        final String ItemPrice = intent.getStringExtra("ItemPrice");
         final String Gst = intent.getStringExtra("Gst");
-        String Desc = intent.getStringExtra("Desc");
-        String IsCertified = intent.getStringExtra("IsCertified");
+        final String Desc = intent.getStringExtra("Desc");
+        final String IsCertified = intent.getStringExtra("IsCertified");
         final String Measurement = intent.getStringExtra("Measurement");
         final String Discount = intent.getStringExtra("Discount");
         final String stock = intent.getStringExtra("Stock");
-        final String ItemCode = intent.getStringExtra("ItemCode");
+        ItemCode = intent.getStringExtra("ItemCode");
         final String HsnCode = intent.getStringExtra("HsnCode");
         final ArrayList<String> imageList = intent.getStringArrayListExtra("images");
 
         assert stock != null;
         int stock1 = Integer.parseInt(stock);
 
+        ref = FirebaseDatabase.getInstance().getReference().child("Review Details");
+
+        stockLeft = findViewById(R.id.stock_left);
+        stockLeft.setVisibility(View.GONE);
+        ViewAll = findViewById(R.id.tv_view_all);
+        AddToWishList = findViewById(R.id.add_to_wishlist);
+        tv_totalRating = findViewById(R.id.total_rating);
+        ratingBar = findViewById(R.id.avg_rating);
+        GoBack = findViewById(R.id.go_back);
+        GotoCart = findViewById(R.id.go_to_cart);
+        recyclerView = findViewById(R.id.recycler_review);
         add = findViewById(R.id.add);
         add.setVisibility(View.INVISIBLE);
         substract = findViewById(R.id.substract);
@@ -123,29 +145,35 @@ public class MainItemDsiplay extends AppCompatActivity {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                quantity.setText(String.valueOf(++q));
+                if (q < Integer.parseInt(stock)) {
+                    quantity.setText(String.valueOf(++q));
+                }else{
+                    stockLeft.setText("Only " + stock + " items left!");
+                    stockLeft.setVisibility(View.VISIBLE);
+                }
             }
         });
         substract.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (q > 1)
+                if (q > 1){
                     quantity.setText(String.valueOf(--q));
+                }
+                stockLeft.setVisibility(View.GONE);
             }
         });
-
 
         itemName.setText(ItemName);
 
         description.setText(Desc);
-        measurement.setText(Measurement);
+        measurement.setText("Item Highlights: " + Measurement);
         //Some Calculation to get final product price
         final int ItemPriceAftrGst = Integer.parseInt(ItemPrice) + (Integer.parseInt(ItemPrice) * Integer.parseInt(Gst) / 100);
         final int ItemPriceAftrDiscount = ItemPriceAftrGst - (ItemPriceAftrGst * Integer.parseInt(Discount) / 100);
 
         itemPrice.setText(String.valueOf(ItemPriceAftrGst));
         itemFinalPrice.setText("₹" + String.valueOf(ItemPriceAftrDiscount));
-        discount.setText(Discount + "%");
+        discount.setText(Discount + "%" + " OFF");
 
         buyNow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,7 +186,7 @@ public class MainItemDsiplay extends AppCompatActivity {
                 int DiscountInRupee = (ItemPriceAftrGst * Integer.parseInt(Discount) / 100) * itemQuantity;
                 int AmountPayable = ItemPriceAftrDiscount * itemQuantity;
                 int deliveryCharge = 0;
-                if (AmountPayable < 500){
+                if (AmountPayable < 500) {
                     deliveryCharge = 30;
                     AmountPayable = AmountPayable + deliveryCharge;
                 }
@@ -194,6 +222,8 @@ public class MainItemDsiplay extends AppCompatActivity {
                 CartDetails cartDetails = new CartDetails(ItemCode,
                         stock,
                         ItemName,
+                        HsnCode,
+                        Gst,
                         String.valueOf(TotalPrice),
                         Measurement,
                         String.valueOf(itemQuantity),
@@ -205,23 +235,119 @@ public class MainItemDsiplay extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isComplete()) {
-                            Toast.makeText(MainItemDsiplay.this, "Item added to cart Successfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainItemDsiplay.this, "Item added to cart Successfully",
+                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
             }
         });
+        GoBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        GotoCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainItemDsiplay.this, CartActivity.class);
+                startActivity(intent);
+            }
+        });
+        AddToWishList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatabaseReference wishlistRef = FirebaseDatabase.getInstance().getReference().child("WishList Details/"
+                        + Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
+                String itemId = wishlistRef.push().getKey();
+                WishlistDetails wishlistDetails = new WishlistDetails(ItemName,
+                        ItemPrice,
+                        Gst,
+                        Desc,
+                        IsCertified,
+                        Measurement,
+                        Discount,
+                        stock,
+                        ItemCode,
+                        HsnCode,
+                        imageList.get(0),
+                        imageList.get(1),
+                        imageList.get(2),
+                        imageList.get(3),
+                        imageList.get(4),
+                        imageList.get(5),
+                        itemId);
+                wishlistRef.child(itemId).setValue(wishlistDetails).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isComplete()) {
+                            Toast.makeText(MainItemDsiplay.this, "Item added to Wishlist Successfully",
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(MainItemDsiplay.this, "Can't Add to WishList right now! Try again later",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
+        ViewAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainItemDsiplay.this, ViewRating.class);
+                intent.putExtra("ItemCode", ItemCode);
+                startActivity(intent);
+            }
+        });
+        initRating();
     }
+
+    public void initRating() {
+        if (ref != null) {
+            ref.limitToFirst(10).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        list = new ArrayList<>();
+                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                            if (ItemCode.equals(ds.getValue(RatingDetails.class).getProductCode())) {
+                                list.add(ds.getValue(RatingDetails.class));
+                                try {
+                                    totalRating = totalRating + Float.parseFloat(ds.getValue(RatingDetails.class).getRating());
+                                } catch (NumberFormatException e) {
+                                    e.fillInStackTrace();
+                                }
+                            }
+                        }
+                        try {
+                            avgRating = (totalRating / (float) list.size());
+                        } catch (ArithmeticException e) {
+                            e.fillInStackTrace();
+                        }
+
+                        tv_totalRating.setText(String.valueOf(list.size()) + " ratings");
+                        ratingBar.setRating(Float.parseFloat(String.valueOf(avgRating)));
+
+                        RatingAdapter ratingAdapter = new RatingAdapter(list, MainItemDsiplay.this);
+                        recyclerView.setAdapter(ratingAdapter);
+                        ratingAdapter.notifyDataSetChanged();
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+    }
+
 
     public static String removeLeadingZeroes(String str) {
         String strPattern = "^0+(?!$)";
         str = str.replaceAll(strPattern, "");
         return str;
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
     }
 }

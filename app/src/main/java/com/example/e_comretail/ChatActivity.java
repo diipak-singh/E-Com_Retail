@@ -1,19 +1,11 @@
 package com.example.e_comretail;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -45,6 +37,8 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        Intent intent = getIntent();
+        String strMessage = intent.getStringExtra("message");
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Chat Support");
         setSupportActionBar(toolbar);
@@ -52,6 +46,7 @@ public class ChatActivity extends AppCompatActivity {
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         editText = (EditText) findViewById(R.id.editText);
+        editText.setText(strMessage);
         addBtn = (RelativeLayout) findViewById(R.id.addBtn);
         call = findViewById(R.id.call);
         recyclerView.setHasFixedSize(true);
@@ -94,14 +89,16 @@ public class ChatActivity extends AppCompatActivity {
 
                 if (model.getAdminMessage().equals("")) {
                     viewHolder.rightText.setText(model.getUserMessage());
+                    viewHolder.rightDate.setText(model.getMessageDate() + " • " + model.getMessageTime());
 
-                    viewHolder.rightText.setVisibility(View.VISIBLE);
-                    viewHolder.leftText.setVisibility(View.GONE);
+                    viewHolder.rightLayout.setVisibility(View.VISIBLE);
+                    viewHolder.leftLayout.setVisibility(View.GONE);
                 } else {
                     viewHolder.leftText.setText(model.getAdminMessage());
+                    viewHolder.leftDate.setText(model.getMessageDate() + " • " + model.getMessageTime());
 
-                    viewHolder.rightText.setVisibility(View.GONE);
-                    viewHolder.leftText.setVisibility(View.VISIBLE);
+                    viewHolder.rightLayout.setVisibility(View.GONE);
+                    viewHolder.leftLayout.setVisibility(View.VISIBLE);
                 }
             }
         };
@@ -134,7 +131,6 @@ public class ChatActivity extends AppCompatActivity {
         String strDate = mdformat.format(calendar.getTime());
         //display(strDate);
         return strDate;
-
     }
 
     public String getCurrentTime() {
@@ -143,8 +139,9 @@ public class ChatActivity extends AppCompatActivity {
         String strTime = mdformat.format(calendar.getTime());
         return strTime;
     }
+
     @Override
-    public boolean onSupportNavigateUp () {
+    public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
     }

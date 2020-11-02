@@ -1,13 +1,14 @@
 package com.example.e_comretail.Details;
 
 public class ItemDetails {
-    private String itemName, itemPrice, itemDesc, imageUrl, imageUrl2,imageUrl3, imageUrl4, imageUrl5, imageUrl6, stock,  discount, costprice, itemdate, itemcode, isCertified, hsncode, gstrate, category, sub_category, gender, mrpprice, companyname, measurement, itemId;
+    private String itemName, keywords, itemPrice, itemDesc, imageUrl, imageUrl2, imageUrl3, imageUrl4, imageUrl5, imageUrl6, stock, discount, costprice, itemdate, itemcode, isCertified, hsncode, gstrate, category, sub_category, gender, mrpprice, companyname, measurement, itemId;
 
     public ItemDetails() {
     }
 
-    public ItemDetails(String itemName, String itemPrice, String itemDesc, String imageUrl, String imageUrl2, String imageUrl3, String imageUrl4, String imageUrl5, String imageUrl6, String stock, String discount, String costprice, String itemdate, String itemcode, String isCertified, String hsncode, String gstrate, String category, String sub_category, String gender, String mrpprice, String companyname, String measurement, String itemId) {
+    public ItemDetails(String itemName, String keywords, String itemPrice, String itemDesc, String imageUrl, String imageUrl2, String imageUrl3, String imageUrl4, String imageUrl5, String imageUrl6, String stock, String discount, String costprice, String itemdate, String itemcode, String isCertified, String hsncode, String gstrate, String category, String sub_category, String gender, String mrpprice, String companyname, String measurement, String itemId) {
         this.itemName = itemName;
+        this.keywords = keywords;
         this.itemPrice = itemPrice;
         this.itemDesc = itemDesc;
         this.imageUrl = imageUrl;
@@ -39,6 +40,14 @@ public class ItemDetails {
 
     public void setItemName(String itemName) {
         this.itemName = itemName;
+    }
+
+    public String getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
     }
 
     public String getItemPrice() {

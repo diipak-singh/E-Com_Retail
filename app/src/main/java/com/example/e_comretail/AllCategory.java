@@ -88,5 +88,4 @@ public class AllCategory extends AppCompatActivity {
         onBackPressed();
         return true;
     }
-
 }

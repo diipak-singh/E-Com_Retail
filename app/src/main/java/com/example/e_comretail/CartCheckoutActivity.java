@@ -1,10 +1,5 @@
 package com.example.e_comretail;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -19,6 +14,11 @@ import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 
 import com.bumptech.glide.Glide;
 import com.example.e_comretail.Details.AddressDetails;
@@ -73,16 +73,15 @@ public class CartCheckoutActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-
         ref = FirebaseDatabase.getInstance().getReference().child("Address/" + Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
         initAddressList();
 
         cartList = (ArrayList<CartDetails>) getIntent().getSerializableExtra("cartDetails");
 
-
         payViaUPI = findViewById(R.id.radio_upi_payment);
         payViaCOD = findViewById(R.id.radio_cash_on_delivery);
         place_order = findViewById(R.id.button_place_order);
+        place_order.setVisibility(View.INVISIBLE);
 
         Address = findViewById(R.id.address);
         Landmark = findViewById(R.id.landmark);
@@ -105,6 +104,17 @@ public class CartCheckoutActivity extends AppCompatActivity {
         progressBar.setVisibility(View.GONE);
 
         calculateBillingDetails();
+
+        addressCard.setVisibility(View.GONE);
+        shippingAddress = findViewById(R.id.shipping_address);
+        shippingAddress.setText("Change Shipping Address");
+        shippingAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CartCheckoutActivity.this, AddNewAddress.class);
+                startActivity(intent);
+            }
+        });
 
         payViaCOD.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,8 +166,8 @@ public class CartCheckoutActivity extends AppCompatActivity {
                             State.setText(addressList.get(0).getState());
                             Zip.setText(addressList.get(0).getZip());
                             Phone.setText(addressList.get(0).getPhone());
-                            /*shippingAddress.setVisibility(View.GONE);
-                            place_order.setVisibility(View.VISIBLE);*/
+                            shippingAddress.setVisibility(View.GONE);
+                            place_order.setVisibility(View.VISIBLE);
                         } else {
                             addressCard.setVisibility(View.GONE);
                             shippingAddress.setVisibility(View.VISIBLE);
@@ -300,9 +310,7 @@ public class CartCheckoutActivity extends AppCompatActivity {
 
         final String paidVia = "Paid via UPI.";
         final String OrderStatus = "Order Placed";
-         //String itmname = ItemName;
         String totalAmount = amountPayable.getText().toString();
-        //String itemQuantity = Quantity;
         String orderDate = getCurrentDate();
         String orderTime = getCurrentTime();
         String userName = user != null ? user.getDisplayName() : null;
@@ -314,14 +322,6 @@ public class CartCheckoutActivity extends AppCompatActivity {
         String userCity = City.getText().toString().trim();
         String userState = State.getText().toString().trim();
         String userZip = Zip.getText().toString().trim();
-
-       /* String itemCode = ItemCode;
-        String image = Image;
-        String orderStatus = OrderStatus;
-        String orderBill = "";
-        String hsnCode = HsnCode;
-        String gstRate = GstRate;
-        String measurement = Measurement;*/
         String EstimatedTime = "2 Days";
 
         for (CartDetails cd : cartList) {
@@ -336,8 +336,8 @@ public class CartCheckoutActivity extends AppCompatActivity {
                     "",
                     EstimatedTime,
                     String.valueOf(totalPayableAmount),
-                    "hsnCode",//ToDo Update this and GST rate
-                    "gstRate",
+                    cd.getHsnCode(),//ToDo Update this and GST rate
+                    cd.getGstRate(),
                     cd.getItemQuantity(),
                     orderTime,
                     orderDate,
@@ -357,14 +357,9 @@ public class CartCheckoutActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isComplete()) {
-                        Toast.makeText(getApplicationContext(),"Placing Orders...",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Placing Orders...", Toast.LENGTH_SHORT).show();
                         //ToDo: show dialog here instead of toast.
-                        /*progressBar.setVisibility(View.INVISIBLE);
-                        Intent intent = new Intent(CartCheckoutActivity.this, AfterOrderActivity.class);
-                        startActivity(intent);
-                        intent.putExtra("Title", "Order Placed!");
-                        intent.putExtra("Desc", "Thanks you for shopping with us! \n your order was placed successfully.");
-                        finish();*/
+                        Toast.makeText(getApplicationContext(), "Placing Orders...", Toast.LENGTH_SHORT).show();
                     } else {
                         progressBar.setVisibility(View.INVISIBLE);
                         Toast.makeText(getApplicationContext(), task.getException().toString(), Toast.LENGTH_SHORT).show();
@@ -372,9 +367,7 @@ public class CartCheckoutActivity extends AppCompatActivity {
                 }
             });
         }
-
-
-
+        ShowAfterOrder();
     }
 
     private void makeOrderCOD() {
@@ -383,9 +376,7 @@ public class CartCheckoutActivity extends AppCompatActivity {
 
         final String paidVia = "Paid via COD.";
         final String OrderStatus = "Order Placed";
-        //String itmname = ItemName;
         String totalAmount = amountPayable.getText().toString();
-        //String itemQuantity = Quantity;
         String orderDate = getCurrentDate();
         String orderTime = getCurrentTime();
         String userName = user != null ? user.getDisplayName() : null;
@@ -397,13 +388,6 @@ public class CartCheckoutActivity extends AppCompatActivity {
         String userCity = City.getText().toString().trim();
         String userState = State.getText().toString().trim();
         String userZip = Zip.getText().toString().trim();
-       /* String itemCode = ItemCode;
-        String image = Image;
-        String orderStatus = OrderStatus;
-        String orderBill = "";
-        String hsnCode = HsnCode;
-        String gstRate = GstRate;
-        String measurement = Measurement;*/
         String EstimatedTime = "2 Days";
 
         for (CartDetails cd : cartList) {
@@ -418,8 +402,8 @@ public class CartCheckoutActivity extends AppCompatActivity {
                     "",
                     EstimatedTime,
                     String.valueOf(totalPayableAmount),
-                    "hsnCode",//ToDo Update this
-                    "gstRate",
+                    cd.getHsnCode(),//ToDo Update this
+                    cd.getGstRate(),
                     cd.getItemQuantity(),
                     orderTime,
                     orderDate,
@@ -439,14 +423,8 @@ public class CartCheckoutActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isComplete()) {
-                        Toast.makeText(getApplicationContext(),"Placing Orders...",Toast.LENGTH_SHORT).show();
                         //ToDo: show dialog here instead of toast.
-                        /*progressBar.setVisibility(View.INVISIBLE);
-                        Intent intent = new Intent(CartCheckoutActivity.this, AfterOrderActivity.class);
-                        startActivity(intent);
-                        intent.putExtra("Title", "Order Placed!");
-                        intent.putExtra("Desc", "Thanks you for shopping with us! \n your order was placed successfully.");
-                        finish();*/
+                        Toast.makeText(getApplicationContext(), "Placing Orders...", Toast.LENGTH_SHORT).show();
                     } else {
                         progressBar.setVisibility(View.INVISIBLE);
                         Toast.makeText(getApplicationContext(), task.getException().toString(), Toast.LENGTH_SHORT).show();
@@ -454,7 +432,21 @@ public class CartCheckoutActivity extends AppCompatActivity {
                 }
             });
         }
+        ShowAfterOrder();
+    }
 
+    public void ShowAfterOrder(){
+        progressBar.setVisibility(View.INVISIBLE);
+        DeleteCart();
+        Intent intent = new Intent(CartCheckoutActivity.this, AfterOrderActivity.class);
+        startActivity(intent);
+        intent.putExtra("Title", "Order Placed!");
+        intent.putExtra("Desc", "Thanks you for shopping with us! \n your order was placed successfully.");
+        finish();
+    }
+    public void DeleteCart(){
+        DatabaseReference CartRef = FirebaseDatabase.getInstance().getReference().child("Cart Details/" + Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
+        CartRef.removeValue();
     }
 
 

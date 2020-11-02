@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.e_comretail.Adapter.ItemDisplayAdapter;
 import com.example.e_comretail.Details.ItemDetails;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,9 +20,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class SearchActivity extends AppCompatActivity {
-    private DatabaseReference ref;
+    private DatabaseReference ref, ref2;
     private RecyclerView recyclerView;
     private ArrayList<ItemDetails> list;
     ArrayList<ItemDetails> myList;
@@ -79,6 +81,37 @@ public class SearchActivity extends AppCompatActivity {
                 intent.putExtra("HsnCode", myList.get(position).getHsncode());
                 intent.putStringArrayListExtra("images", imageList);
                 startActivity(intent);
+
+                //creating recent searches
+                ref2 = FirebaseDatabase.getInstance().getReference().child("Recent Search/"
+                        + Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
+                String itemId = ref2.push().getKey();
+                ItemDetails itemDetails = new ItemDetails(ItemName,
+                        list.get(position).getKeywords(),
+                        ItemPrice,
+                        list.get(position).getItemDesc(),
+                        image1,
+                        image2,
+                        image3,
+                        image4,
+                        image5,
+                        image6,
+                        Stock,
+                        Discount,
+                        list.get(position).getCostprice(),
+                        list.get(position).getItemdate(),
+                        list.get(position).getItemcode(),
+                        list.get(position).getIsCertified(),
+                        list.get(position).getHsncode(),
+                        list.get(position).getGstrate(),
+                        list.get(position).getCategory(),
+                        list.get(position).getSub_category(),
+                        list.get(position).getGender(),
+                        list.get(position).getMrpprice(),
+                        list.get(position).getCompanyname(),
+                        list.get(position).getMeasurement(),
+                        list.get(position).getItemId());
+                ref2.child(itemId).setValue(itemDetails);
             }
 
             @Override
@@ -136,9 +169,7 @@ public class SearchActivity extends AppCompatActivity {
     private void search(String str) {
         myList = new ArrayList<>();
         for (ItemDetails object : list) {
-            if (object.getItemName().toLowerCase().contains(str.toLowerCase())
-                    || object.getSub_category().toLowerCase().contains(str.toLowerCase())
-                    || object.getItemDesc().toLowerCase().contains(str.toLowerCase())) {
+            if (object.getKeywords().toLowerCase().contains(str.toLowerCase())) {
                 myList.add(object);
             }
         }

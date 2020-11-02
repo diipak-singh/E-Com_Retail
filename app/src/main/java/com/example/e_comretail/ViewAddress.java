@@ -36,15 +36,14 @@ public class ViewAddress extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_address);
-
-        //toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("View Address");
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("Address/" + Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("Address/"
+                + Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
         recyclerView = findViewById(R.id.recycler_address);
         AddAddress = findViewById(R.id.add_address);
         AddAddress.setOnClickListener(new View.OnClickListener() {
@@ -69,13 +68,7 @@ public class ViewAddress extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case 0:
-                                databaseReference.child(list.get(position).getItemId()).removeValue();
-                                Toast.makeText(ViewAddress.this,
-                                        "Address Deleted Successfully",
-                                        Toast.LENGTH_SHORT).show();
-                                Intent intent = getIntent();
-                                finish();
-                                startActivity(intent);
+                                deleteAddress(position);
                                 break;
 //                            default:
 //
@@ -88,6 +81,16 @@ public class ViewAddress extends AppCompatActivity {
                 dialog.show();
             }
         }));
+    }
+
+    public void deleteAddress(int position) {
+        databaseReference.child(list.get(position).getItemId()).removeValue();
+        Toast.makeText(ViewAddress.this,
+                "Address Deleted Successfully",
+                Toast.LENGTH_SHORT).show();
+        Intent intent = getIntent();
+        finish();
+        startActivity(intent);
     }
 
     @Override
